@@ -68,7 +68,7 @@ test('successful callback exchanges code, fetches profile and creates bounded en
   };
   const r = await callback(back(a, { state: a.url.searchParams.get('state'), code: 'private-code' }), env, fake);
   assert.equal(calls, 2);
-  assert.equal(r.headers.get('location'), origin + '/account');
+  assert.equal(r.headers.get('location'), origin + '/lists');
   assert.equal(r.headers.get('cache-control'), 'no-store');
   const cookie = r.headers.getSetCookie().find(x => x.startsWith('__Host-mal-session='));
   assert.match(cookie, /Max-Age=3600/);

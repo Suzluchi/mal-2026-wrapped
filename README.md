@@ -1,8 +1,8 @@
 # MAL 2026 Wrapped
 
-## Current release: real list import
+## Current release: automatic list loading
 
-MAL login and logout, a connected-account page, and read-only imports of the signed-in user's anime and manga lists. The account page now links to `/lists`.
+MAL login and logout, a connected-account page, and read-only imports of the signed-in user's anime and manga lists. Successful MAL sign-in now goes directly to `/lists`, where both lists load automatically. No manual import step is shown.
 
 The importer includes progress, independent retries for each list, search, table pagination, current-list totals, and inspection of recorded start/finish dates by year. It does not modify your MAL lists. The story demo remains fictional; a personal Wrapped story and shareable cards are not implemented yet.
 
@@ -10,7 +10,7 @@ The importer includes progress, independent retries for each list, search, table
 
 Upload the contents of this release ZIP to the root of the existing `Suzluchi/mal-2026-wrapped` repository. Include `app`, `lib`, `tests`, `package.json`, `pnpm-lock.yaml`, and this README, replacing previous versions. The dotfiles may be uploaded too. Do not upload `.git`, `.next`, `node_modules`, or any real `.env` file.
 
-Commit to main with `Add anime and manga list importing`. Wait for Vercel to build that commit. If it is Staged, promote that new deployment to the production domain.
+Commit to main with `Load MAL lists automatically after sign-in`. Wait for Vercel to build that commit. If it is Staged, promote that new deployment to the production domain.
 
 The three existing production variables stay unchanged:
 
@@ -23,8 +23,8 @@ No new credentials, database, or paid service are required.
 ## First live check
 
 1. Sign in on the production website.
-2. On the welcome page, select Import my lists.
-3. Select Import both lists and wait for both imports to finish.
+2. After MAL approval, you return directly to your lists.
+3. Wait for both lists to load automatically; no import button is needed.
 4. Compare the current list totals and a few titles/scores/dates against MAL.
 5. Select 2026 to inspect recorded dates. Missing dates are excluded from annual completion counts.
 
@@ -66,3 +66,5 @@ pnpm start
 ```
 
 Authoritative API reference: https://myanimelist.net/apiconfig/references/api/v2
+
+Automatic-loading update: all 20 tests and the production build passed. A browser check loaded 103 fictional anime titles and an empty manga list on page entry without clicking any import control. The effect aborts requests on unmount and safely restarts after cleanup. Retry is available only for failed lists. Live list import had already been confirmed by the project owner on the preceding version.

@@ -1,5 +1,5 @@
 'use client';
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import { collectPages, summarise } from '../../lib/lists.mjs';
 const blank = { status: 'idle', count: 0, items: [], error: '' };
@@ -22,7 +22,7 @@ function Summary({ kind, state, year }) {
     <div className="list-metrics"><div><strong>{stats.total}</strong><span>titles on your current list</span></div><div><strong>{stats.completed}</strong><span>currently marked completed</span></div><div><strong>{stats.finished.length}</strong><span>completed with a finish date in {year}</span></div></div>
     <p>{stats.started} titles have a recorded start date in {year}. {stats.undatedCompleted} completed titles have missing, partial, or invalid finish dates and are excluded from the yearly count.</p>
     {state.items.length === 0 ? <p>Your {kind} list is empty in the data returned by MAL.</p> : <>
-    <label className="list-search">Search {kind} titles<input value={search} onChange={e => { setSearch(e.target.value); setPage(0); }} placeholder="Search your imported list" /></label>
+    <label className="list-search">Search {kind} titles<input value={search} onChange={e => { setSearch(e.target.value); setPage(0); }} placeholder="Search your list" /></label>
     <div className="list-table-wrap"><table><caption>Your current {kind} list · {matches.length} matching titles</caption><thead><tr><th scope="col">Title</th><th scope="col">Current status</th><th scope="col">Your score</th><th scope="col">Start date</th><th scope="col">Finish date</th></tr></thead><tbody>{matches.slice(current * 25, current * 25 + 25).map(item => <tr key={item.id}><td>{item.title}</td><td>{item.status.replaceAll('_', ' ')}</td><td>{item.score ?? 'Unrated'}</td><td>{item.startDate || 'Not recorded'}</td><td>{item.finishDate || 'Not recorded'}</td></tr>)}</tbody></table></div>
     {matches.length === 0 && <p>No titles match your search.</p>}
     {count > 1 && <nav className="list-pagination" aria-label={`${kind} table pages`}><button className="button secondary" disabled={current === 0} onClick={() => setPage(current - 1)}>Previous</button><span>Page {current + 1} of {count}</span><button className="button secondary" disabled={current + 1 >= count} onClick={() => setPage(current + 1)}>Next</button></nav>}
@@ -33,8 +33,7 @@ export default function ListImporter() {
   const [lists, setLists] = useState({ anime: blank, manga: blank });
   const [year, setYear] = useState(2026);
   const controllers = useRef({});
-  useEffect(() => () => Object.values(controllers.current).forEach(c => c.abort()), []);
-  async function start(kind) {
+  const start = useCallback(async (kind) => {
     if (controllers.current[kind]) return;
     const controller = new AbortController();
     controllers.current[kind] = controller;
@@ -49,13 +48,20 @@ export default function ListImporter() {
       }, count => update({ ...blank, status: 'loading', count }), controller.signal);
       update({ status: 'done', items, count: items.length, error: '' });
     } catch (error) { update({ ...blank, status: 'error', error: error.message }); }
-    finally { delete controllers.current[kind]; }
-  }
+    finally { if (controllers.current[kind] === controller) delete controllers.current[kind]; }
+  }, []);
+  useEffect(() => {
+    start('anime');
+    start('manga');
+    return () => {
+      Object.values(controllers.current).forEach(controller => controller.abort());
+      controllers.current = {};
+    };
+  }, [start]);
   return <>
     <div className="list-notice"><h2>Dates tell part of the story.</h2><p>MAL lists are a current snapshot, not a complete activity history. Yearly counts below use complete dates you recorded on MAL. They do not prove how many episodes or chapters you consumed in that year. Rewatches, rereads, and activity without dates are not reconstructed.</p><label>Year to inspect <select value={year} onChange={e => setYear(Number(e.target.value))}>{Array.from({ length: 27 }, (_, i) => 2026 - i).map(y => <option key={y} value={y}>{y}</option>)}</select></label></div>
-    <div className="actions"><button className="button primary" disabled={Object.values(lists).some(s => s.status === 'loading')} onClick={() => { start('anime'); start('manga'); }}>Import both lists</button></div>
-    {['anime', 'manga'].map(kind => <section className="import-section" key={kind}><div className="import-heading"><h2>{kind === 'anime' ? 'Anime' : 'Manga'}</h2><button className="button secondary" disabled={lists[kind].status === 'loading'} onClick={() => start(kind)}>{lists[kind].status === 'done' ? 'Refresh list' : lists[kind].status === 'error' ? 'Retry import' : 'Import list'}</button></div>
-    <div role="status" aria-live="polite">{lists[kind].status === 'idle' && <p>Ready to import.</p>}{lists[kind].status === 'loading' && <p>Importing… {lists[kind].count} unique titles received. Large lists can take a little longer.</p>}{lists[kind].status === 'done' && <p>Import complete: {lists[kind].count} titles.</p>}</div>
+    {['anime', 'manga'].map(kind => <section className="import-section" key={kind}><div className="import-heading"><h2>{kind === 'anime' ? 'Anime' : 'Manga'}</h2><span>{lists[kind].status === 'error' && <button className="button secondary" onClick={() => start(kind)}>Try again</button>}</span></div>
+    <div role="status" aria-live="polite">{lists[kind].status === 'idle' && <p>Getting your list ready…</p>}{lists[kind].status === 'loading' && <p>Loading your list… {lists[kind].count} unique titles received. Large lists can take a little longer.</p>}{lists[kind].status === 'done' && <p>List ready: {lists[kind].count} titles.</p>}</div>
     {lists[kind].status === 'error' && <p role="alert">{errors[lists[kind].error] || 'The import could not finish. Please retry. Incomplete results are not shown as full totals.'} {['expired', 'access_denied'].includes(lists[kind].error) && <Link href="/connect">Connect again</Link>}</p>}
     <Summary kind={kind} state={lists[kind]} year={year} />
     </section>)}

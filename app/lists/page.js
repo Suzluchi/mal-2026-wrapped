@@ -1,3 +1,4 @@
+import SiteHeader, { SiteFooter } from '../components/site-header';
 import Link from 'next/link';
 import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
@@ -9,5 +10,5 @@ export default async function Lists() {
   try { cfg = config(); } catch { redirect('/connect?error=configuration'); }
   const session = unseal((await cookies()).get(sessionName)?.value, 'session', cfg.secret);
   if (!session?.accessToken) redirect('/connect?error=expired');
-  return <main className="lists-page"><Link className="brand" href="/account">MAL WRAPPED / MY ACCOUNT</Link><p className="eyebrow">YOUR PERSONAL RECAP</p><h1>Your stories, in review.</h1><p>Your anime and manga lists load automatically after sign-in. We only read your lists; we do not change them.</p><ListImporter name={session.user?.name} asOf={new Date().toISOString().slice(0,10)} /><p><Link href="/privacy">Privacy</Link> · <Link href="/account">Back to account</Link></p></main>;
+  return <><SiteHeader account/><main id="main-content" className="lists-page"><div className="reader-title"><div><p className="eyebrow">THE PERSONAL EDITION</p><h1>Your issue.</h1></div><p>The titles. The detours. The ones that stayed.<br/>Your lists load automatically.</p></div><ListImporter name={session.user?.name} asOf={new Date().toISOString().slice(0,10)} /><p><Link href="/privacy">Privacy</Link> · <Link href="/account">Back to account</Link></p></main><SiteFooter/></>;
 }

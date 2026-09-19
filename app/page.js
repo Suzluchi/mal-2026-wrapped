@@ -1,32 +1,13 @@
 import Link from 'next/link';
-
+import SiteHeader, { SiteFooter } from './components/site-header';
 export default function Home() {
-  return <>
-    <header className="nav"><Link className="brand" href="/" aria-label="MAL Wrapped home"><span className="brand-icon">✳</span> MAL<span className="brand-light">WRAPPED</span></Link><a className="nav-link" href="#how-it-works">How it works <span>↗</span></a></header>
-    <main>
-      <section className="hero">
-        <div className="hero-copy"><p className="eyebrow"><span className="dot" /> THE 2026 EDITION · IN THE MAKING</p>
-          <h1>Your year.<br />Your obsession.<br /><span className="outline">Your wrapped.</span></h1>
-          <p className="intro">The late nights. The one-more-episodes. The manga you couldn’t put down. Let’s make a story out of your year.</p>
-          <div className="actions"><Link className="button primary" href="/demo">Explore a sample <span>↗</span></Link><a className="button secondary" href="/connect">Connect with MyAnimeList <span>＋</span></a></div>
-          <p className="micro">Anime + manga. All your main-character energy.</p>
-        </div>
-        <div className="hero-art" aria-label="Illustrated 2026 Wrapped preview">
-          <div className="orbit orbit-one" /><div className="orbit orbit-two" />
-          <span className="art-star star-one">✳</span><span className="art-star star-two">✦</span>
-          <div className="year-art">20<br />26<span className="year-caption">A YEAR WORTH REPLAYING</span></div>
-          <div className="ticket"><span>YOUR NEXT CHAPTER</span><strong>To be continued…</strong><div className="ticket-bottom"><span>ANIME / MANGA</span><span>▶ PLAY IT BACK</span></div></div>
-          <span className="art-label">THE STORIES STAY WITH YOU.</span>
-        </div>
-      </section>
-      <div className="ticker" aria-hidden="true"><span>YOUR FAVOURITES</span> ✳ <span>YOUR PLOT TWISTS</span> ✳ <span>YOUR LATE NIGHTS</span> ✳ <span>YOUR YEAR IN ANIME</span> ✳</div>
-      <section className="features" id="how-it-works"><div className="section-heading"><p className="eyebrow">MORE THAN A LIST</p><h2>Every obsession has a story.</h2><p>Here’s what we’re building for your year in review.</p></div><div className="feature-grid">
-        <article><span className="feature-number">01 / RECONNECT</span><h3>Start with your list.</h3><p>Connect your MyAnimeList account. Your anime and manga are the starting point.</p></article>
-        <article><span className="feature-number">02 / RELIVE</span><h3>Find your favourites.</h3><p>Explore the titles, genres and studios that shaped your year, one reveal at a time.</p></article>
-        <article><span className="feature-number">03 / MAKE IT YOURS</span><h3>Keep the good parts.</h3><p>Shareable recap cards are on the way. Until then, take the sample story for a spin.</p></article>
-      </div></section>
-      <section className="connection" id="connection"><span className="connection-symbol" aria-hidden="true">✳</span><div><p className="eyebrow">A LITTLE EARLY TO THE PARTY</p><h2>Your list, coming soon.</h2><p>MyAnimeList sign-in is available. Personal recaps are still in development. The sample is fictional and does not use your account data.</p></div><Link className="button primary" href="/demo">Try the sample ↗</Link></section>
-    </main>
-    <footer><span className="brand">MAL<span className="brand-light">WRAPPED</span></span><p>A fan-made project. Not affiliated with MyAnimeList.</p><Link href="/privacy">Privacy</Link></footer>
-  </>;
+  return <><SiteHeader/><main id="main-content">
+    <section className="cover-story">
+      <div className="cover-copy"><p className="eyebrow"><span className="edition-dot"/> THE PERSONAL EDITION / 2026</p><h1>THE PLOT<br/>WAS <em>YOURS.</em></h1><p className="cover-deck">You watched. You read.<br/>Some of it never left you.</p><p className="cover-description">Turn your MyAnimeList into a personal issue: favourite titles, unexpected patterns, and the stories you came back to.</p><div className="actions"><Link className="button primary" href="/connect">Make my edition <span aria-hidden="true">↗</span></Link><Link className="text-link" href="/demo">Flip through a sample →</Link></div><p className="micro">Your lists load automatically. Your password stays with MAL.</p></div>
+      <div className="cover-object"><div className="issue-shadow" aria-hidden="true"/><div className="issue-front" aria-label="Illustrated sample magazine cover"><div className="issue-masthead">WRAPPED<span>VOL.<br/>2026</span></div><div className="issue-art"><img src="/art/issue-cover.svg" alt="Original geometric illustration of an eye, an orbit, and a red sun"/><span className="issue-sticker">ONE<br/>MORE<br/><em>EPISODE.</em></span></div><div className="issue-bottom"><span>THE THINGS<br/>THAT STAYED.</span><p>ANIME • MANGA<br/>A PERSONAL RETROSPECTIVE</p></div><div className="issue-barcode" aria-hidden="true"/></div><p className="object-caption"><span>FIG. 01</span> A whole year. In your own issue.</p></div>
+    </section>
+    <div className="editorial-strip"><span>THE FAVOURITES</span><i aria-hidden="true">/</i><span>THE DEEP CUTS</span><i aria-hidden="true">/</i><span>THE COMEBACKS</span><i aria-hidden="true">/</i><span>THE END CREDITS</span></div>
+    <section className="contents-section" id="how-it-works"><div className="section-caption"><span className="eyebrow">INSIDE YOUR ISSUE</span><span className="folio">01—03</span></div><div className="contents-layout"><h2>MORE THAN<br/>A <em>WATCHLIST.</em></h2><div className="contents-rows"><article><span>01</span><div><h3>Your taste, in print.</h3><p>The titles you rated highest. The genres you gravitated toward. The people behind the stories.</p></div></article><article><span>02</span><div><h3>A year, or the whole collection.</h3><p>Choose a year for dated completions, or explore All time. Rewatches and rereads get their own space.</p></div></article><article><span>03</span><div><h3>One reveal at a time.</h3><p>Move through your chapters, linger on a favourite, or open the full breakdown. You set the pace.</p></div></article></div></div></section>
+    <section className="editor-note"><span className="editor-mark" aria-hidden="true">↗</span><div><p className="eyebrow">A NOTE FROM THE EDITOR</p><h2>Your list tells a story.<br/><em>Not every detail.</em></h2><p>We use the dates and scores on your MAL lists. When something is missing—or a repeat can’t be placed in a year—we say so. No invented watch hours.</p></div><Link className="button secondary" href="/connect">Open your edition ↗</Link></section>
+  </main><SiteFooter/></>;
 }

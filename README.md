@@ -1,16 +1,16 @@
 # MAL 2026 Wrapped
 
-## Current release: personal recap chapters
+## Current release: the magazine edition
 
 MAL sign-in loads both lists automatically. The recap opens with the account name and period totals, then follows a chapter sequence through score reveals, ranked titles, rating distribution, completion months, genres, studios/creators, formats, adaptation sources, release years, and catalog lengths. Chapters appear only when supported by data. Repeats, data coverage, and a closing summary round out the story. Empty selections have a shorter path.
 
-The player supports previous/next, chapter selection, replay, and left/right arrows when a non-control element inside the player has focus. Ties are preserved. MAL cover art is used when available, with letter placeholders on failure. Details and searchable lists remain below the player. Visual direction and downloadable sharing cards are later stages; this release does not add sharing or fabricated personality claims. The /demo route remains fictional.
+The player supports previous/next, chapter selection, replay, and left/right arrows when a non-control element inside the player has focus. Ties are preserved. MAL cover art is used when available, with letter placeholders on failure. Details and searchable lists remain below the player. The visual direction is an original anime magazine: warm paper, black ink, vermilion/blue accents, bold display type, serif editorial copy, numbered spreads, original SVG artwork, and sticky chapter controls. Layouts adapt to mobile and respect reduced-motion settings. The /demo route now uses the same chapter player with clearly fictional titles and original sample covers. Sample titles never link to unrelated MAL entries. Downloadable sharing cards remain a later stage.
 
 ## Deployment
 
-Extract mal-2026-wrapped-story.zip. Upload its contents to the root of Suzluchi/mal-2026-wrapped, replacing matching files. Include app, lib, tests, package.json, pnpm-lock.yaml and README.md. Do not upload node_modules, .next, .git or real .env files.
+Extract mal-2026-wrapped-magazine.zip. Upload its contents to the root of Suzluchi/mal-2026-wrapped, replacing matching files. Include app, lib, public, tests, package.json, pnpm-lock.yaml and README.md. The new public/art folder is required for the home illustration and sample covers. Do not upload node_modules, .next, .git or real .env files.
 
-Commit as Add recap chapters and repeat context. Wait for Vercel Ready and promote the new deployment if Staged. Use the production domain for sign-in.
+Commit as Redesign MAL Wrapped as a personal magazine. Wait for Vercel Ready and promote the new deployment if Staged. Use the production domain for sign-in.
 
 Existing production variables stay unchanged:
 - MAL_CLIENT_ID
@@ -37,6 +37,8 @@ All list statuses are requested, including adult-classified entries, to avoid si
 Tokens stay in encrypted Secure/HttpOnly cookies for up to one hour and are not returned to client JavaScript. Normalised list information stays in page memory; no database or local-storage persistence is added. Provider requests are private/no-store. Following pages reconstruct fixed MAL endpoints; supplied next URLs are never fetched directly. A failed page never becomes a complete total. Each page has a 15-second timeout and 100-entry maximum; the importer is bounded to 1,000 pages and offset 100,000.
 
 ## Validation
+
+Magazine update: production build and all 41 existing tests passed. Browser checks verified all 29 sample chapters on mobile without page-wide horizontal overflow, reveal controls, replay and edition reset, sign-in layout, narrow home layout, original assets, and the signed-in automatic-loading flow with fictional test data. New home and supporting-page text reflects the available recap.
 
 41 automated tests passed: authentication, pagination, errors, normalisation, date consistency, repeat counters/flags, unknown-versus-zero data, all-time/annual separation, rankings, story composition, and allowed cover hosts. Production build passed. Browser checks used a separate fictional provider: paginated anime, manga, active repeats, tied reveal, replay, chapter selection, year reset, sparse-year flow, keyboard navigation and mobile width. No real account credentials or lists were used. Live repeat fields and covers should be checked after deployment.
 

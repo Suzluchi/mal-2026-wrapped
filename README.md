@@ -68,3 +68,11 @@ pnpm start
 Authoritative API reference: https://myanimelist.net/apiconfig/references/api/v2
 
 Automatic-loading update: all 20 tests and the production build passed. A browser check loaded 103 fictional anime titles and an empty manga list on page entry without clicking any import control. The effect aborts requests on unmount and safely restarts after cleanup. Retry is available only for failed lists. Live list import had already been confirmed by the project owner on the preceding version.
+
+## Personal recap update
+
+After both lists load automatically, /lists shows a ten-chapter personal recap. Select a year (1900–2026) or All time. Chapters cover completed anime and manga, highest scores, top five including cutoff ties, current average ratings, busiest recorded completion months, and date coverage. Full searchable lists remain available below the story.
+
+Annual recaps include only currently completed titles with valid full finish dates in the selected year. All time includes undated completions. Scores are current scores, not historical ratings; no episode, chapter, time-spent, rewatch, or reread history is inferred. Recorded dates are used as supplied, including future dates if present. Empty lists produce explicit empty results; failed loads never become zero totals.
+
+Validation: 24 automated tests passed and the production build passed. Real-account recap verification follows deployment. No new environment variables are required.

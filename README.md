@@ -76,3 +76,11 @@ After both lists load automatically, /lists shows a ten-chapter personal recap. 
 Annual recaps include only currently completed titles with valid full finish dates in the selected year. All time includes undated completions. Scores are current scores, not historical ratings; no episode, chapter, time-spent, rewatch, or reread history is inferred. Recorded dates are used as supplied, including future dates if present. Empty lists produce explicit empty results; failed loads never become zero totals.
 
 Validation: 24 automated tests passed and the production build passed. Real-account recap verification follows deployment. No new environment variables are required.
+
+## Richer insights update
+
+Lists now request genres, original release/publication dates, formats, anime studios and adaptation sources, and manga creators in the existing paginated requests. A new section below the recap shows completed-title category counts and current average scores, for the selected year or All time. Missing metadata is reported per breakdown. Categories can overlap; duplicate credits count once per title, unrated titles do not affect score averages, and leading-category ties are retained. Release years never determine the user's completion year.
+
+Validated against the saved official MAL API v2 schema. Validation: 30 passing automated tests, successful production build, and local browser checks with fictional paginated data for automatic loading, year/All time changes, empty lists, and mobile width. Live metadata availability must be confirmed after deployment. No credentials or environment-variable changes are needed.
+
+Deploy by extracting mal-2026-wrapped-richer-insights.zip and uploading its contents to the existing repository root, replacing matching files. Commit as Add richer list insights. Wait for Vercel Ready and promote if Staged.

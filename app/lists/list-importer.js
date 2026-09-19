@@ -1,4 +1,5 @@
 'use client';
+import ListInsights from './list-insights';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import { collectPages, summarise } from '../../lib/lists.mjs';
@@ -61,7 +62,8 @@ export default function ListImporter() {
   }, [start]);
   return <>
     <div className="list-notice"><h2>Dates tell part of the story.</h2><p>MAL lists are a current snapshot, not a complete activity history. Yearly counts below use complete dates you recorded on MAL. They do not prove how many episodes or chapters you consumed in that year. Rewatches, rereads, and activity without dates are not reconstructed.</p><label>Recap period <select value={year} onChange={e => setYear(e.target.value === 'all' ? 'all' : Number(e.target.value))}><option value="all">All time</option>{Array.from({ length: 127 }, (_, i) => 2026 - i).map(y => <option key={y} value={y}>{y}</option>)}</select></label></div>
-    {lists.anime.status === 'done' && lists.manga.status === 'done' && <PersonalRecap key={year} anime={lists.anime.items} manga={lists.manga.items} period={year} />}
+    {lists.anime.status === 'done' && lists.manga.status === 'done' && <PersonalRecap key={`recap-${year}`} anime={lists.anime.items} manga={lists.manga.items} period={year} />}
+    {lists.anime.status === 'done' && lists.manga.status === 'done' && <ListInsights key={`insights-${year}`} anime={lists.anime.items} manga={lists.manga.items} period={year} />}
     {['anime', 'manga'].map(kind => <section className="import-section" key={kind}><div className="import-heading"><h2>{kind === 'anime' ? 'Anime' : 'Manga'}</h2><span>{lists[kind].status === 'error' && <button className="button secondary" onClick={() => start(kind)}>Try again</button>}</span></div>
     <div role="status" aria-live="polite">{lists[kind].status === 'idle' && <p>Getting your list ready…</p>}{lists[kind].status === 'loading' && <p>Loading your list… {lists[kind].count} unique titles received. Large lists can take a little longer.</p>}{lists[kind].status === 'done' && <p>List ready: {lists[kind].count} titles.</p>}</div>
     {lists[kind].status === 'error' && <p role="alert">{errors[lists[kind].error] || 'The import could not finish. Please retry. Incomplete results are not shown as full totals.'} {['expired', 'access_denied'].includes(lists[kind].error) && <Link href="/connect">Connect again</Link>}</p>}

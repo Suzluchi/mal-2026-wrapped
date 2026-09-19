@@ -1,56 +1,52 @@
 'use client';
-import { useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { buildStory } from '../../lib/story.mjs';
-const monthName=value=>new Date(value+'-01T00:00:00Z').toLocaleDateString('en',{month:'short',year:'numeric',timeZone:'UTC'});
-function Cover({item}) {
+function Picture({src,label,className=''}) {
   const [failed,setFailed]=useState(false);
-  return item.cover && !failed ? <img className="story-cover" src={item.cover} alt="" loading="lazy" referrerPolicy="no-referrer" onError={()=>setFailed(true)}/> : <span className="story-cover story-placeholder" aria-hidden="true">{item.title.slice(0,1)}</span>;
+  return src&&!failed?<img className={className} src={src} alt={label} referrerPolicy="no-referrer" onError={()=>setFailed(true)}/>:<span className={`${className} fx-placeholder`} aria-label={label}>{label.slice(0,1)}</span>;
 }
-function Picks({items,metric='score',unit='/10',kind}) {
-  return <ol className="story-picks">{items.map((item,index)=>{
-    const rank=items.findIndex(x=>x[metric]===item[metric])+1;
-    return <li key={item.id}><span className="story-rank">{rank}</span><Cover item={item}/><div className="pick-copy">{item.isSample?<span className="pick-title">{item.title}</span>:<a className="pick-title" href={`https://myanimelist.net/${kind}/${item.id}`} target="_blank" rel="noreferrer">{item.title}</a>}<p>{item[metric]}{unit}{index>0 && items[index-1][metric]===item[metric]?' · tied':''}</p></div></li>;
-  })}</ol>;
+function Scene({slide,data,name,avatar,period}) {
+  if(slide.type==='opening')return <><Picture className="fx-avatar fx-arrive" src={avatar} label={name||'You'}/><p className="fx-hello fx-arrive">Hey, {name||'you'}.</p><h2 className="fx-arrive">Your {period==='all'?'all-time':period} Wrapped<br/>is here.</h2><p className="fx-quip fx-arrive">{slide.quip}</p></>;
+  if(slide.type==='question')return <><span className="fx-question-mark fx-arrive" aria-hidden="true">?</span><h2 className="fx-arrive">{slide.title}</h2><p className="fx-quip fx-arrive">{slide.quip}</p></>;
+  if(['count','number','month'].includes(slide.type))return <><p className="fx-eyebrow fx-arrive">{slide.type==='count'?'LOOK AT YOU GO.':slide.type==='month'?'YOUR BUSIEST COMPLETION MONTH':'THE VERDICT'}</p>{slide.type==='month'&&<h2 className="fx-arrive">{slide.title}</h2>}<div className="fx-number fx-arrive">{slide.value}<small>{slide.unit}</small></div>{slide.type!=='month'&&<h2 className="fx-arrive">{slide.title}</h2>}<p className="fx-quip fx-arrive">{slide.quip}</p></>;
+  if(slide.type==='spotlight')return <><p className="fx-eyebrow fx-arrive">{slide.title}</p><Picture key={slide.item.id} className="fx-hero-cover fx-arrive" src={slide.item.cover} label={slide.item.title}/><h2 className="fx-title fx-arrive">{slide.item.title}</h2><strong className="fx-score fx-arrive">{slide.item[slide.metric]}<small>{slide.unit}</small></strong><p className="fx-quip fx-arrive">{slide.quip}</p></>;
+  if(slide.type==='ranking')return <><h2 className="fx-arrive">{slide.title}</h2><ol className="fx-ranking">{slide.items.map((item,index)=><li className="fx-arrive" key={item.id} style={{'--order':index+1}}><span>{index+1}</span><Picture className="fx-small-cover" src={item.cover} label={item.title}/><div title={item.title}>{item.title}</div><strong>{item[slide.metric]}<small>{slide.unit}</small></strong></li>)}</ol><p className="fx-quip fx-arrive">{slide.quip}</p></>;
+  if(slide.type==='categories')return <><h2 className="fx-arrive">{slide.title}</h2><ol className="fx-categories">{slide.rows.map((row,index)=><li className="fx-arrive" key={row.id} style={{'--order':index+1}}><span>0{index+1}</span><div title={row.name}>{row.name}<small>{row.count} {row.count===1?'title':'titles'}</small></div></li>)}</ol><p className="fx-quip fx-arrive">{slide.quip}</p></>;
+  if(slide.type==='repeats')return <><span className="fx-loop fx-arrive" aria-hidden="true">↺</span><h2 className="fx-arrive">{slide.title}</h2><div className="fx-repeat-stats fx-arrive"><div><strong>{data.anime.repeats.known?data.anime.repeats.count:'—'}</strong><span>recorded rewatches</span></div><div><strong>{data.manga.repeats.known?data.manga.repeats.count:'—'}</strong><span>recorded rereads</span></div></div><p className="fx-scope fx-arrive">ALL-TIME COUNTS</p><p className="fx-quip fx-arrive">{slide.quip}</p></>;
+  return <><p className="fx-eyebrow fx-arrive">{name||'YOUR'} / {period==='all'?'ALL TIME':period}</p><h2 className="fx-arrive">{slide.title}</h2><div className="fx-repeat-stats fx-arrive"><div><strong>{data.anime.count}</strong><span>anime completed</span></div><div><strong>{data.manga.count}</strong><span>manga completed</span></div></div><div className="fx-final-covers fx-arrive">{[['anime',data.anime],['manga',data.manga]].map(([kind,s])=>s.highest[0]&&<Picture key={kind} src={s.highest[0].cover} label={s.highest[0].title} className="fx-ending-cover"/>)}</div><p className="fx-quip fx-arrive">{slide.quip}</p></>;
 }
-function Bars({rows}) {
-  const max=Math.max(1,...rows.map(x=>x.count));
-  return <ul className="story-bars">{rows.map((row,index)=><li key={row.id??row.name??index}><div><span>{row.name}</span><strong>{row.count}</strong></div><span className="story-track" aria-hidden="true"><span style={{width:`${row.count/max*100}%`}}/></span></li>)}</ul>;
-}
-function Totals({data}) {
-  return <div className="story-totals">{['anime','manga'].map(kind=><div key={kind}><strong>{data[kind].count}</strong><span>{kind} titles completed</span><small>{data[kind].average===null?'No scored completions':`${data[kind].average.toFixed(1)}/10 average · ${data[kind].rated} scored`}</small></div>)}</div>;
-}
-function RepeatBlock({stats,kind}) {
-  const label=kind==='anime'?'rewatches':'rereads';
-  return <div><h3>{kind==='anime'?'Anime':'Manga'}</h3><p><strong>{stats.known?stats.count:'Unknown'}</strong> recorded {label} · <strong>{stats.activeKnown?stats.active.length:'Unknown'}</strong> {stats.active.length===1?'title':'titles'} currently being revisited.</p><p className="story-note">Repeat counts returned for {stats.known} of {stats.total} list entries. Current repeat flags returned for {stats.activeKnown} of {stats.total} entries. A recorded zero does not prove you never revisited a title.</p>{stats.titles.length>0 && <details><summary>Titles with recorded {label}</summary><ul>{stats.titles.map(x=><li key={x.id}>{x.title} — {x.repeatCount}</li>)}</ul></details>}{stats.active.length>0 && <details><summary>Currently revisiting</summary><ul>{stats.active.map(x=><li key={x.id}>{x.title}</li>)}</ul></details>}</div>;
-}
-function Chapter({slide,data,period,name,asOf,onStart}) {
-  const [revealed,setRevealed]=useState(false);
-  const s=slide.stats;
-  switch(slide.type) {
-    case 'opening':return <><p className="story-greeting">{name?`${name}, this is your shelf.`:'This is your shelf.'}</p><Totals data={data}/><p>{period==='all'?'Your completed collection, including titles you are currently revisiting.':`Completions with usable finish dates in ${period}, through ${asOf} (UTC).`}</p></>;
-    case 'count':return <><p className="story-big">{s.count}</p><p>{s.count?'Distinct completed titles in this selection. Repeat events are counted separately as all-time context.':'There are no eligible completions in this selection. That does not mean you watched or read nothing.'}</p>{!s.count && <p>Try All time, or inspect the dates on your MAL list. Watching, reading, and undated annual activity are not treated as new completions.</p>}</>;
-    case 'reveal':return revealed?<Picks items={slide.items} metric={slide.metric} unit={slide.unit} kind={slide.kind}/>:<div className="story-reveal"><span className="reveal-kicker">THE SCORE IS IN.</span><div className="reveal-score">{slide.items[0].score}<small>/10</small></div><p>{slide.items.length===1?"One title earned your highest score.":`${slide.items.length} titles share your highest score.`}</p><button className="button primary" onClick={()=>setRevealed(true)}>Reveal {slide.items.length===1?'the title':`${slide.items.length} tied titles`}</button></div>;
-    case 'picks':return <Picks items={slide.items} metric={slide.metric} unit={slide.unit} kind={slide.kind}/>;
-    case 'scores':return <><p className="story-big">{s.average.toFixed(1)}<small>/10</small></p><p>Your average across {s.rated} scored titles. {s.count-s.rated} unrated titles are excluded. These are your current ratings, not a record of when you rated.</p><Bars rows={s.scores.map(x=>({...x,name:`${x.name}/10`}))}/></>;
-    case 'months':return <><p>{s.busiest.map(([month])=>monthName(month)).join(', ')} {s.busiest.length===1?'had':'shared'} the most recorded completions: <strong>{s.busiest[0][1]}</strong>{s.busiest.length>1?' each':''}.</p><Bars rows={s.months.map(([name,count])=>({name:monthName(name),count}))}/><p className="story-note">Only months with eligible completions are shown. Finish dates do not measure episodes, chapters, or repeat events.</p></>;
-    case 'categories':return <><Bars rows={slide.rows}/><p className="story-note">Details available for {slide.coverage.covered} of {slide.total} titles. {slide.coverage.missing} without usable details. Categories can overlap.</p></>;
-    case 'years':return <><h3>Earliest: {s.oldest[0].releaseYear}</h3><Picks items={s.oldest} metric="releaseYear" unit="" kind={slide.kind}/>{s.newest[0].releaseYear!==s.oldest[0].releaseYear && <><h3>Most recent: {s.newest[0].releaseYear}</h3><Picks items={s.newest} metric="releaseYear" unit="" kind={slide.kind}/></>}<p className="story-note">Release years available for {s.yearKnown} of {s.count} titles. Titles sharing the earliest or latest year stay tied.</p></>;
-    case 'repeats':return <><p className="story-scope">ALL-TIME CONTEXT · THROUGH {asOf}</p><p>MAL gives us recorded repeat counts and current repeat flags, but no dates for each repeat. These totals cannot be assigned to {period==='all'?'individual years':period}; repeat events stay separate from distinct-title totals.</p><RepeatBlock kind="anime" stats={data.anime.repeats}/><RepeatBlock kind="manga" stats={data.manga.repeats}/></>;
-    case 'context':return <><p>One title counts once per list. Scores reflect your ratings now. Anime and manga totals stay separate.</p>{['anime','manga'].map(kind=>{const x=data[kind].issues;return <div key={kind}><h3>{kind==='anime'?'Anime':'Manga'} date coverage</h3><ul><li>{x.undated} missing, partial, or invalid finish dates</li><li>{x.future} future finish dates</li><li>{x.reversed} finish dates before start dates</li><li>{x.activeRepeat} titles currently being revisited</li></ul></div>;})}<p>These groups are excluded from yearly results and completion-month rankings. All time keeps them in the completed collection. During a rewatch or reread, MAL may show a watching/reading status; the repeat flag tells us the title was previously completed.</p><p>We cannot reconstruct your full activity history or time spent from this snapshot. Catalog episode/chapter lengths are not personal activity totals.</p></>;
-    case 'closing':return <><p className="story-greeting">{name?`${name}'s`:'Your'} {period==='all'?'completed collection':`${period} recap`}</p><Totals data={data}/>{['anime','manga'].map(kind=>data[kind].highest.length>0 && <div key={kind}><h3>Highest-rated {kind}</h3><Picks items={data[kind].highest} kind={kind}/></div>)}<p>There is more detail in your insights and lists below. Change the period above to explore another chapter of your history.</p></>;
-    default:return null;
-  }
-}
-export default function PersonalRecap({anime,manga,period,asOf,name}) {
+export default function PersonalRecap({anime,manga,period,asOf,name,avatar}) {
   const {slides,data}=useMemo(()=>buildStory(anime,manga,period,asOf),[anime,manga,period,asOf]);
-  const [step,setStep]=useState(0),heading=useRef(null),root=useRef(null);
+  const [step,setStep]=useState(0),[open,setOpen]=useState(true),[info,setInfo]=useState(false);
+  const dialog=useRef(null),launcher=useRef(null),surface=useRef(null),gesture=useRef(null),suppressClick=useRef(0);
   const slide=slides[step];
-  function move(next){setStep(Math.max(0,Math.min(slides.length-1,next))); requestAnimationFrame(()=>{heading.current?.focus({preventScroll:true});root.current?.scrollIntoView({block:'start',behavior:'instant'});});}
-  function keys(event){if(event.target.closest('button,a,input,select,textarea,summary'))return;if(event.key==='ArrowRight'){event.preventDefault();move(step+1);}if(event.key==='ArrowLeft'){event.preventDefault();move(step-1);}}
-  return <section ref={root} className="personal-recap story-player" data-kind={slide.kind || 'editorial'} data-type={slide.type} aria-label="Your personal recap" onKeyDown={keys}>
-    <header className="story-header"><span className="story-imprint">MW / {period==='all'?'ARCHIVE':period}</span><span className="story-section-label">{slide.group}</span><label><span className="sr-only">Chapters</span><select aria-label="Jump to chapter" value={step} onChange={e=>move(Number(e.target.value))}>{slides.map((x,index)=><option key={x.id} value={index}>{index+1}. {x.group}: {x.title}</option>)}</select></label></header>
-    <progress value={step+1} max={slides.length} aria-label="Recap progress"/>
-    <div key={slide.id} className="story-chapter"><div className="chapter-heading"><p className="story-position" aria-live="polite"><span>{String(step+1).padStart(2,'0')}</span> / {String(slides.length).padStart(2,'0')} <i>— {slide.group}</i></p><h2 ref={heading} tabIndex={-1}>{slide.title}</h2><span className="chapter-glyph" aria-hidden="true">↗</span></div><div className="chapter-content"><Chapter slide={slide} data={data} period={period} asOf={asOf} name={name}/>{slide.note && <p className="story-note">{slide.note}</p>}</div></div>
-    <nav className="story-controls" aria-label="Recap pages"><button className="button secondary" disabled={step===0} onClick={()=>move(step-1)}>Previous</button>{step<slides.length-1?<button className="button primary" onClick={()=>move(step+1)}>{step===0?'Begin your recap':'Next chapter'} →</button>:<button className="button primary" onClick={()=>move(0)}>Play again</button>}</nav>
-  </section>;
+  const infoClose=useRef(null),infoTrigger=useRef(null);
+  useEffect(()=>{if(info)infoClose.current?.focus({preventScroll:true});},[info]);
+  function closeInfo(){setInfo(false);infoTrigger.current?.focus({preventScroll:true});}
+  const covers=useMemo(()=>[...anime,...manga].filter(x=>x.cover).slice(0,8),[anime,manga]);
+  useEffect(()=>{
+    const el=dialog.current;
+    if(!open){if(el.open)el.close();launcher.current?.focus({preventScroll:true});return;}
+    const old=document.body.style.overflow;document.body.style.overflow='hidden';if(!el.open)el.showModal();
+    surface.current?.focus({preventScroll:true});
+    return ()=>{document.body.style.overflow=old;if(el.open)el.close();};
+  },[open]);
+  function move(next){setStep(Math.max(0,Math.min(slides.length-1,next)));setInfo(false);surface.current?.focus({preventScroll:true});}
+  function key(event){if(info){if(event.key==='Escape'){event.preventDefault();closeInfo();}return;}if(event.target.closest('select,input,textarea'))return;if(event.target===surface.current && (event.key===' '||event.key==='Enter')){event.preventDefault();move(step+1);return;}if(event.key==='ArrowRight'){event.preventDefault();move(step+1);}if(event.key==='ArrowLeft'){event.preventDefault();move(step-1);}}
+  function tap(event){if(info||Date.now()<suppressClick.current||event.target.closest('button,a,select,input'))return;const rect=event.currentTarget.getBoundingClientRect();move(step+(event.clientX-rect.left<rect.width*.28?-1:1));}
+  function pointerDown(event){if(!info&&!event.target.closest('button,a,select,input'))gesture.current={x:event.clientX,y:event.clientY};}
+  function pointerUp(event){const start=gesture.current;gesture.current=null;if(!start||info)return;const dx=event.clientX-start.x,dy=event.clientY-start.y;if(Math.abs(dx)>45&&Math.abs(dx)>Math.abs(dy)*1.4){suppressClick.current=Date.now()+400;move(step+(dx<0?1:-1));}}
+  const fullTitles=slide.items|| (slide.item?[slide.item]:[]);
+  return <><div className="fx-launch"><p>Your recap is ready.</p><button ref={launcher} className="button primary" onClick={()=>setOpen(true)}>Open my Wrapped ↗</button><span>Tap, swipe, or use the arrow keys.</span></div>
+    <dialog ref={dialog} className="fx-dialog" aria-label="Your interactive Wrapped" onCancel={event=>{event.preventDefault();if(info)closeInfo();else setOpen(false);}} onKeyDown={key}>
+      <div className="fx-atmosphere" aria-hidden="true">{(covers.length?covers:[{id:'art',cover:'/art/issue-cover.svg'}]).map((x,index)=><img key={`${x.id}-${index}`} src={x.cover} alt="" referrerPolicy="no-referrer" style={{'--i':index}}/>)}</div>
+      <div className="fx-shell"><div className="fx-toolbar"><span>{anime.some(x=>x.isSample)?'FICTIONAL DEMO':'MW'} / {period==='all'?'ALL TIME':period}</span><div><button ref={infoTrigger} aria-label="About these numbers" aria-expanded={info} onClick={()=>setInfo(!info)}>ⓘ</button><button aria-label="Close recap" onClick={()=>setOpen(false)}>×</button></div></div>
+      <div ref={surface} tabIndex={0} className="fx-card" data-kind={slide.kind||'intro'} data-type={slide.type} onClick={tap} onPointerDown={pointerDown} onPointerUp={pointerUp} onPointerCancel={()=>{gesture.current=null;}} aria-label={`${slide.group}, card ${step+1} of ${slides.length}`}>
+        <div className="fx-progress" role="progressbar" aria-label="Recap progress" aria-valuenow={step+1} aria-valuemin={1} aria-valuemax={slides.length}>{slides.map((x,index)=><span key={x.id} className={index<=step?'is-read':''}/>)}</div>
+        <p className="fx-section">{slide.group}<span>{String(step+1).padStart(2,'0')} / {slides.length}</span></p>
+        <div key={slide.id} className="fx-scene" inert={info} aria-hidden={info} aria-live="polite" aria-atomic="true"><Scene slide={slide} data={data} period={period} name={name} avatar={avatar}/></div>
+        <nav inert={info} aria-hidden={info} className="fx-nav" aria-label="Story controls"><button disabled={step===0} onClick={()=>move(step-1)} aria-label="Previous card">←</button><span>{step===0?'TAP TO BEGIN':'TAP OR SWIPE'}</span>{step<slides.length-1?<button onClick={()=>move(step+1)} aria-label={step===0?'Begin recap':'Next card'}>→</button>:<button onClick={()=>move(0)} aria-label="Replay recap">↺</button>}</nav>
+        {info&&<section className="fx-info" aria-label="About these numbers"><button ref={infoClose} onClick={closeInfo} aria-label="Close information">×</button><h2>Behind the numbers</h2><p>Snapshot: {asOf} (UTC). Annual totals use valid recorded finish dates, not a complete watch/read history. Undated activity and active repeats cannot be assigned to a year. All time includes previously completed titles currently being revisited.</p><p>Scores are your current MAL scores. We show up to five titles and three categories. Equal values use title/name order, then ID, to keep the display stable. The first highlight can be one of several equally scored titles.</p><p>Repeat counts are recorded all-time counters, not dated events. Missing counters are unknown. Catalog episode/chapter lengths are not hours watched or activity within the chosen year.</p>{['anime','manga'].map(kind=><p key={kind}>{kind}: {data[kind].missingDates} completed titles lack a full valid finish date; {data[kind].issues.future} have future dates; {data[kind].issues.reversed} have reversed dates; {data[kind].issues.activeRepeat} are being revisited.</p>)}{fullTitles.length>0&&<><h3>On this card</h3><ul>{fullTitles.map(x=><li key={x.id}>{x.title}</li>)}</ul></>}</section>}
+      </div><p className="fx-bottom-hint">Your taste. Your story.</p></div>
+    </dialog></>;
 }

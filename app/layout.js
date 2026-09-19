@@ -1,4 +1,5 @@
 import './globals.css';
+import './flash-recap.css';
 
 export const metadata = {
   title: 'MAL Wrapped — The personal edition',

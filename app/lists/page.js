@@ -10,5 +10,5 @@ export default async function Lists() {
   try { cfg = config(); } catch { redirect('/connect?error=configuration'); }
   const session = unseal((await cookies()).get(sessionName)?.value, 'session', cfg.secret);
   if (!session?.accessToken) redirect('/connect?error=expired');
-  return <><SiteHeader account/><main id="main-content" className="lists-page"><div className="reader-title"><div><p className="eyebrow">THE PERSONAL EDITION</p><h1>Your issue.</h1></div><p>The titles. The detours. The ones that stayed.<br/>Your lists load automatically.</p></div><ListImporter name={session.user?.name} asOf={new Date().toISOString().slice(0,10)} /><p><Link href="/privacy">Privacy</Link> · <Link href="/account">Back to account</Link></p></main><SiteFooter/></>;
+  return <><SiteHeader account/><main id="main-content" className="lists-page"><div className="reader-title"><div><p className="eyebrow">THE PERSONAL EDITION</p><h1>Your issue.</h1></div><p>The titles. The detours. The ones that stayed.<br/>Your lists load automatically.</p></div><ListImporter avatar={session.user?.avatar} name={session.user?.name} asOf={new Date().toISOString().slice(0,10)} /><p><Link href="/privacy">Privacy</Link> · <Link href="/account">Back to account</Link></p></main><SiteFooter/></>;
 }

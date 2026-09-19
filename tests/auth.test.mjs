@@ -64,7 +64,7 @@ test('successful callback exchanges code, fetches profile and creates bounded en
     }
     assert.equal(url, 'https://api.myanimelist.net/v2/users/@me');
     assert.equal(options.headers.Authorization, 'Bearer private-token');
-    return Response.json({ id: 123, name: 'TestUser' });
+    return Response.json({ id: 123, name: 'TestUser', picture: 'https://cdn.myanimelist.net/images/userimages/123.jpg' });
   };
   const r = await callback(back(a, { state: a.url.searchParams.get('state'), code: 'private-code' }), env, fake);
   assert.equal(calls, 2);
@@ -75,6 +75,7 @@ test('successful callback exchanges code, fetches profile and creates bounded en
   assert.ok(!cookie.includes('private-token'));
   const data = unseal(cookie.split(';')[0].split('=')[1], 'session', env.MAL_CLIENT_SECRET);
   assert.equal(data.user.name, 'TestUser');
+  assert.equal(data.user.avatar, 'https://cdn.myanimelist.net/images/userimages/123.jpg');
   assert.equal(data.accessToken, 'private-token');
   assert.ok(!JSON.stringify(data).includes('discard-me'));
 });

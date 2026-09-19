@@ -29,8 +29,8 @@ test('repeat context is lifetime, deduplicated, and does not add active passes t
  assert.equal(r.count,3);assert.equal(r.known,1);assert.equal(r.unknown,1);assert.equal(r.activeKnown,1);assert.equal(r.active.length,1);
 });
 test('story suppresses unsupported chapters but always explains repeats and coverage',()=>{
- const empty=buildStory([],[],2026,asOf);assert.equal(empty.slides.length,6);assert.ok(!empty.slides.some(x=>x.type==='reveal'));
- assert.deepEqual(empty.slides.slice(-3).map(x=>x.id),['repeats','context','closing']);
+ const empty=buildStory([],[],2026,asOf);assert.equal(empty.slides.length,3);assert.ok(!empty.slides.some(x=>x.type==='reveal'));
+ assert.deepEqual(empty.slides.map(x=>x.id),['opening','empty','closing']);
  const data=buildStory([item(1,{length:12,releaseYear:2000,genres:[{id:1,name:'Drama'}]}),item(2,{score:4,length:24,releaseYear:2010})],[],2026,asOf);
  assert.ok(data.slides.some(x=>x.id==='anime-highest'));assert.ok(data.slides.some(x=>x.id==='anime-bottom'));assert.ok(data.slides.some(x=>x.id==='anime-genres'));assert.ok(data.slides.some(x=>x.id==='anime-longest'));assert.ok(!data.slides.some(x=>x.id==='manga-highest'));
  assert.equal(new Set(data.slides.map(x=>x.id)).size,data.slides.length);
@@ -42,4 +42,15 @@ test('catalog length and year rankings keep ties and omit unknown lengths',()=>{
 test('covers allow only HTTPS MAL CDN resources',()=>{
  assert.equal(coverURL('https://cdn.myanimelist.net/images/anime/test.jpg'),'https://cdn.myanimelist.net/images/anime/test.jpg');
  for(const url of ['http://cdn.myanimelist.net/a','https://evil.example/a','javascript:alert(1)','https://user:secret@cdn.myanimelist.net/a']) assert.equal(coverURL(url),null);
+});
+
+test('flashcard story caps rankings at five and categories at three, even with equal scores',()=>{
+ const entries=Array.from({length:12},(_,id)=>item(id,{genres:[{id,name:`Genre ${id}`}],studios:[{id,name:`Studio ${id}`}]}));
+ const result=buildStory(entries,[],2026,asOf);
+ assert.equal(result.slides.find(x=>x.id==='anime-top').items.length,5);
+ assert.equal(result.slides.find(x=>x.id==='anime-genres').rows.length,3);
+ assert.equal(result.slides.find(x=>x.id==='anime-credits').rows.length,3);
+ assert.equal(result.slides.find(x=>x.id==='anime-highest').item.id,0);
+ assert.ok(!result.slides.some(x=>['context','formats','sources','years'].includes(x.type)));
+ const q=result.slides.findIndex(x=>x.id==='anime-question');assert.equal(result.slides[q+1].id,'anime-highest');
 });

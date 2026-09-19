@@ -84,3 +84,13 @@ Lists now request genres, original release/publication dates, formats, anime stu
 Validated against the saved official MAL API v2 schema. Validation: 30 passing automated tests, successful production build, and local browser checks with fictional paginated data for automatic loading, year/All time changes, empty lists, and mobile width. Live metadata availability must be confirmed after deployment. No credentials or environment-variable changes are needed.
 
 Deploy by extracting mal-2026-wrapped-richer-insights.zip and uploading its contents to the existing repository root, replacing matching files. Commit as Add richer list insights. Wait for Vercel Ready and promote if Staged.
+
+## Accuracy update (supersedes earlier date rules)
+
+Recap, insights, and list summaries now share lib/eligibility.mjs. Annual totals require currently completed status, a full valid finish date no later than the server-rendered UTC snapshot date, and no valid recorded start date later than the finish. Missing/partial/invalid, future, and reversed dates are reported separately (future takes precedence over reversed). All time retains every currently completed title but excludes unreliable dates from completion-month rankings. Partial start dates do not establish chronology. Release/publication dates never determine personal completion year.
+
+The server passes one snapshot date to all components; the year selector follows that date. Reload to refresh the snapshot. Scores remain current scores, unrated/invalid scores are excluded, and cutoff ties stay included. No episode, chapter, rewatch, reread, or time-spent history is inferred.
+
+Validation: 35 automated tests passed, covering shared totals, leap dates, today/tomorrow boundaries, date order, duplicates, ties, invalid ratings, and existing authentication/import behavior. Production build passed. No live-account data was used for these tests.
+
+Deploy the contents of mal-2026-wrapped-accuracy.zip to the repository root, replacing matching files. Commit as Improve recap accuracy. No environment-variable changes required.

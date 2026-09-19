@@ -1,47 +1,68 @@
 # MAL 2026 Wrapped
 
-## Account connection update
+## Current release: real list import
 
-This release implements MAL authorization-code login with PKCE, state validation, a connected-account page, and logout. Anime/manga list importing and personal statistics are not implemented yet. `/demo` remains explicitly fictional.
+MAL login and logout, a connected-account page, and read-only imports of the signed-in user's anime and manga lists. The account page now links to `/lists`.
 
-## Deployment
+The importer includes progress, independent retries for each list, search, table pagination, current-list totals, and inspection of recorded start/finish dates by year. It does not modify your MAL lists. The story demo remains fictional; a personal Wrapped story and shareable cards are not implemented yet.
 
-Upload `app`, `lib`, `tests`, `package.json`, and this README to the root of the existing repository, replacing the earlier files. Include `pnpm-lock.yaml` if present. Do not upload `.env.local`, `.git`, or `node_modules`.
+## Upload and deployment
 
-The production environment needs:
+Upload the contents of this release ZIP to the root of the existing `Suzluchi/mal-2026-wrapped` repository. Include `app`, `lib`, `tests`, `package.json`, `pnpm-lock.yaml`, and this README, replacing previous versions. The dotfiles may be uploaded too. Do not upload `.git`, `.next`, `node_modules`, or any real `.env` file.
+
+Commit to main with `Add anime and manga list importing`. Wait for Vercel to build that commit. If it is Staged, promote that new deployment to the production domain.
+
+The three existing production variables stay unchanged:
 
 - MAL_CLIENT_ID
 - MAL_CLIENT_SECRET
 - MAL_REDIRECT_URI=https://mal-2026-wrapped.vercel.app/api/auth/callback/mal
 
-Values belong in Vercel environment variables, never in code. The redirect must exactly match the registered MAL redirect. This implementation requires HTTPS. Preview addresses intentionally cannot initiate login using the production redirect configuration.
+No new credentials, database, or paid service are required.
 
-After the GitHub commit, wait for the Vercel build. If it is marked Staged, promote that new deployment to the production domain. Test Connect with MyAnimeList, approve on MAL, confirm the returned username, and test Log out. Also try cancelling authorization.
+## First live check
 
-## Security and retention
+1. Sign in on the production website.
+2. On the welcome page, select Import my lists.
+3. Select Import both lists and wait for both imports to finish.
+4. Compare the current list totals and a few titles/scores/dates against MAL.
+5. Select 2026 to inspect recorded dates. Missing dates are excluded from annual completion counts.
 
-- Login and logout use POST with strict Origin validation.
-- PKCE uses a random 86-character verifier and the `plain` method currently required by MAL's official documentation: https://myanimelist.net/apiconfig/references/authorization
-- A separate random state is bound to a ten-minute encrypted browser cookie; it is checked before any token request.
-- AES-256-GCM authenticated encryption protects session and flow cookies. Purpose-specific associated data prevents substituting one cookie for another. A dedicated encryption key is derived with HKDF from MAL_CLIENT_SECRET. Rotating that secret invalidates cookies.
-- Cookies use Secure, HttpOnly, SameSite=Lax, Path=/, and the __Host- prefix, with no Domain attribute.
-- Sessions retain only the MAL user ID, username, and access token, for at most one hour and no longer than the token lifetime. Refresh tokens are discarded. Sessions are stateless and are not stored in a database.
-- Logout clears the browser cookies. It does not revoke MAL authorization or invalidate a previously stolen cookie before expiry. Manage app authorization through MAL when necessary.
-- Provider requests use fixed HTTPS endpoints, no caching, no redirect following, and 15-second timeouts. Errors shown to the browser do not include provider responses, authorization codes, or tokens.
-- The Client Secret never enters frontend code. The Client ID is necessarily sent to MAL in the OAuth authorization URL, as required by the protocol.
+## Accuracy and limits
 
-## Checks
+- The MAL list API provides a current snapshot, not a complete historical activity log.
+- A yearly completed-title count requires current status `completed` and a complete, valid finish date in the selected year. Year-only, month-only, missing, and invalid dates remain unknown. The UI shows how many completed entries lack a qualifying full finish date.
+- Recorded starts are counted separately. Updated-at timestamps and current episode/chapter totals are not used to infer activity within a year.
+- Rewatch/reread activity is not reconstructed. In-progress titles with old finish dates are not treated as currently completed titles.
+- All list statuses are requested, with NSFW filtering disabled so adult-classified entries are not silently omitted. The importer currently displays titles and fields, not cover images.
+- Each server request fetches one page of at most 100 entries. Following pages use offsets reconstructed against a fixed MAL endpoint, never arbitrary provider-supplied URLs. Duplicate IDs are merged.
+- Failed or unfinished imports never display partial data as a complete list. The other list's successful import remains usable. A retry starts the failed list again from the beginning.
+- Limits: 1,000 pages per import, maximum accepted offset 100,000, and 15 seconds per provider request. List changes during import can affect pagination; refresh if totals appear inconsistent.
 
-Use Node.js 24.x and pnpm 11.19.0.
+## Privacy and security
 
-`node --test tests/auth.test.mjs` runs the security and flow checks without additional packages. Tests use fictional credentials and mocked MAL responses.
+The existing encrypted, Secure, HttpOnly session cookie retains a token for at most one hour. Tokens are never returned to browser JavaScript. Only normalised list IDs, titles, statuses, scores and recorded dates are returned to the page. No list database or browser persistence is used; leave or refresh the page to discard the in-memory import. API responses are private/no-store. Provider errors and token values are not logged by this code.
 
-`pnpm install` and `pnpm build` install dependencies and perform a production build.
+Login uses state validation, MAL-compatible PKCE, and same-origin POST checks. Logout clears this browser's cookies; MAL authorization can be revoked separately in MAL settings. The privacy page reflects list importing.
 
-## Next milestone
+## Verification
 
-Import paginated anime/manga lists, define date eligibility, and calculate personal recaps. Current episode/chapter totals alone must not be treated as activity within a calendar year.
+- 20 automated authentication, pagination, data-normalisation, error-handling and date-eligibility tests passed.
+- The Next.js production build passed locally.
+- Browser checks against the production build and a separate local mock provider passed: 103 anime entries across two API pages, an empty manga list, search, table pagination, year selection, and mobile layout without page-wide horizontal overflow.
+- Unauthenticated list API requests returned 401; the list page redirected to sign-in.
+- No real MAL credentials or personal lists were used for these tests. The live account import must still be checked after deployment.
+- The local mock provider is stored outside the release and is not included in the ZIP.
 
-## Verification for this update
+## Development
 
-Nine automated authentication/security tests passed using mocked MAL responses. Server module syntax checks and relative import checks passed. A local production build could not be completed because dependency downloads timed out/remained stalled, even after retrying with a longer timeout. The real MAL authorization flow still needs verification on the production domain after Vercel builds this update. No credentials are included in this package.
+Node.js 24.x, pnpm 11.19.0.
+
+```sh
+pnpm install --frozen-lockfile
+pnpm test
+pnpm build
+pnpm start
+```
+
+Authoritative API reference: https://myanimelist.net/apiconfig/references/api/v2

@@ -13,7 +13,7 @@ test('all surfaces share completion eligibility for every period',()=>{
  assert.equal(r.count,i.count);assert.equal(r.count,s.finished.length);
  }
  assert.equal(recap(items,2026,asOf).count,2);
- assert.deepEqual(selectCompletions(items,2026,asOf).issues,{undated:3,future:1,reversed:1});
+ assert.deepEqual(selectCompletions(items,2026,asOf).issues,{undated:3,future:1,reversed:1,activeRepeat:0});
 });
 test('all time retains completed statuses but excludes unreliable dates from months',()=>{
  const r=recap(items,'all',asOf);assert.equal(r.count,9);assert.equal(r.busiest.length,4);

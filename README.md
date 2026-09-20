@@ -8,7 +8,7 @@ Questions lead to a single title reveal, then up to five ranked titles. Genres a
 
 ## Deployment
 
-Extract mal-2026-wrapped-keepsake.zip. Upload its contents into the root of Suzluchi/mal-2026-wrapped, replacing matching files. Include app, lib, public, tests, package.json, pnpm-lock.yaml and README.md. Do not upload node_modules, .next, .git or real .env files.
+Extract mal-2026-wrapped-cover-pop.zip. Upload its contents into the root of Suzluchi/mal-2026-wrapped, replacing matching files. Include app, lib, public, tests, package.json, pnpm-lock.yaml and README.md. Do not upload node_modules, .next, .git or real .env files.
 
 Commit as Add 4:3 recap, typography and keepsake. Wait for Vercel Ready; promote if Staged. Test /demo first, then sign out and back in on the production domain to refresh the profile picture. Existing MAL_CLIENT_ID, MAL_CLIENT_SECRET and MAL_REDIRECT_URI stay unchanged. No new services or credentials are required.
 
@@ -41,7 +41,7 @@ Tokens stay in encrypted Secure/HttpOnly cookies for up to one hour and are not 
 
 ## Validation
 
-All 45 automated tests and production build passed. Browser checks covered the 30-card fictional sample at 1366x768, 1024x600 and 320x568. Verified 4:3 desktop proportions, PNG download, copied summary, and automatic import from an isolated delayed mock. Native share sheets depend on browser support; otherwise Share downloads the image. Live MAL data and profile pictures still need a deployment check. Local mock data and reference recordings are not packaged.
+All 46 automated tests and production build passed. Browser checks covered the 30-card fictional sample at 1366x768, 1024x600 and 320x568. Verified 4:3 desktop proportions, PNG download, copied summary, and automatic import from an isolated delayed mock. Native share sheets depend on browser support; otherwise Share downloads the image. Live MAL data and profile pictures still need a deployment check. Local mock data and reference recordings are not packaged.
 
 ## Development
 
@@ -55,3 +55,7 @@ pnpm start
 ```
 
 API reference: https://myanimelist.net/apiconfig/references/api/v2
+
+## Cover-pop update
+
+Completion-count cards show up to five eligible title covers with staggered pop entrances. Separate anime rewatch and manga reread cards show up to five titles from recorded lifetime repeats and active repeat flags. Active repeats are labelled separately; this does not assign repeats to the selected year. Missing covers use an initial. Reduced-motion settings disable the cover animation. Sample now has 32 cards; phone fit checked through both repeat galleries.

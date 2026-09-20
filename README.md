@@ -1,16 +1,26 @@
 # MAL 2026 Wrapped
 
-## Current release: interactive Wrapped
+## Current release: 4:3 stories, typography and keepsakes
 
 Sign-in imports both lists automatically, then opens an immersive story overlay. A floating card sits over blurred, gently moving cover artwork. Each card contains one reveal, with staggered text and image animation. Tap, swipe, use previous/next buttons or arrow keys. Close returns to the supporting website. Replay starts over. There is no automatic advance. Reduced-motion settings are respected.
 
-Questions lead to a single title reveal, then up to five ranked titles. Genres and studios/creators show up to three. Detailed date, score and repeat explanations live behind the information button. No tied labels appear on the main cards. Anime studios and manga creators are separate. Profile pictures appear after a fresh sign-in; a letter is used if unavailable. The demo uses explicitly fictional data and original artwork. This release uses cover-art backgrounds, not video. Sharing cards remain a later stage.
+Questions lead to a single title reveal, then up to five ranked titles. Genres and studios/creators show up to three. Detailed date, score and repeat explanations live behind the information button. No tied labels appear on the main cards. Anime studios and manga creators are separate. Profile pictures appear after a fresh sign-in; a letter is used if unavailable. The demo uses explicitly fictional data and original artwork. This release uses cover-art backgrounds, not video. The final keepsake supports PNG download, native file sharing where available (download fallback otherwise), and copying a text summary. No public personal-recap URL is created.
 
 ## Deployment
 
-Extract mal-2026-wrapped-interactive.zip. Upload its contents into the root of Suzluchi/mal-2026-wrapped, replacing matching files. Include app, lib, public, tests, package.json, pnpm-lock.yaml and README.md. Do not upload node_modules, .next, .git or real .env files.
+Extract mal-2026-wrapped-keepsake.zip. Upload its contents into the root of Suzluchi/mal-2026-wrapped, replacing matching files. Include app, lib, public, tests, package.json, pnpm-lock.yaml and README.md. Do not upload node_modules, .next, .git or real .env files.
 
-Commit as Build interactive Wrapped experience. Wait for Vercel Ready; promote if Staged. Test /demo first, then sign out and back in on the production domain to refresh the profile picture. Existing MAL_CLIENT_ID, MAL_CLIENT_SECRET and MAL_REDIRECT_URI stay unchanged. No new services or credentials are required.
+Commit as Add 4:3 recap, typography and keepsake. Wait for Vercel Ready; promote if Staged. Test /demo first, then sign out and back in on the production domain to refresh the profile picture. Existing MAL_CLIENT_ID, MAL_CLIENT_SECRET and MAL_REDIRECT_URI stay unchanged. No new services or credentials are required.
+
+## Design and remaining work
+
+Desktop cards scale at a 4:3 aspect ratio. Narrow phones retain a taller layout for readable text. Supplied Transcity and Peachy Mighties files are embedded, with their supplied license documents in public/fonts. Transcity is a personal-use demo; these files do not establish commercial rights. Keep the font licenses with the files and confirm the appropriate rights before commercial distribution.
+
+John is a simplified original SVG rendition, animated along a loading-stage bar. It does not show a fabricated completion percentage. The user-approved revised card copy is used, with moderate staggered transitions and reduced-motion support.
+
+Wrapped awards use the leading genre among eligible completed titles. Character matches are a small editorial genre-to-character mapping, explicitly described as playful. Manga matches require eligible manga with genre data. No night-viewing or time-spent claims are inferred. Unmapped genres receive an award but no invented character match.
+
+Official MAL event badges are NOT connected. The available official API schema has no badge field or endpoint. All requested earned/zero badge messages are saved in lib/awards.mjs. Unknown data is explicitly distinct from a verified empty badge list; no zero-badge accusation is shown. A reliable badge source and year attribution are still required before enabling this card. Music awaits user-provided files.
 
 ## Completion and repeat rules
 
@@ -31,7 +41,7 @@ Tokens stay in encrypted Secure/HttpOnly cookies for up to one hour and are not 
 
 ## Validation
 
-All 42 automated tests and production build passed. Browser checks covered the 27-card fictional sample at a 320 by 568 viewport, previous/next, keyboard navigation, replay, information focus and dismissal, and closing/reopening the overlay. Live MAL data and profile pictures still need a deployment check. Local mock data and reference recordings are not packaged.
+All 45 automated tests and production build passed. Browser checks covered the 30-card fictional sample at 1366x768, 1024x600 and 320x568. Verified 4:3 desktop proportions, PNG download, copied summary, and automatic import from an isolated delayed mock. Native share sheets depend on browser support; otherwise Share downloads the image. Live MAL data and profile pictures still need a deployment check. Local mock data and reference recordings are not packaged.
 
 ## Development
 

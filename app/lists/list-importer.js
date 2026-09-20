@@ -1,4 +1,5 @@
 'use client';
+import JohnLoader from './john-loader';
 import ListInsights from './list-insights';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
@@ -63,7 +64,7 @@ export default function ListImporter({ asOf, name, avatar }) {
   const ready=lists.anime.status==='done' && lists.manga.status==='done';
   const failed=lists.anime.status==='error' || lists.manga.status==='error';
   return <>
-    {!ready && !failed && <div className="fx-loading" role="status"><div className="fx-loader-art" aria-hidden="true"><span/><span/><span/></div><h2>Gathering your plot twists…</h2><p>{lists.anime.count+lists.manga.count} titles found so far.</p><span>ANIME + MANGA / YOUR STORY</span></div>}
+    {!ready && !failed && <JohnLoader animeCount={lists.anime.count} mangaCount={lists.manga.count} animeDone={lists.anime.status==='done'} mangaDone={lists.manga.status==='done'}/>}
     <div className="list-notice"><details><summary>How dates and repeat counts work</summary><p>MAL lists are a current snapshot, not a complete activity history. Yearly counts use complete finish dates on or before {asOf} (UTC), excluding dates before a recorded start date. All time includes completed titles and titles currently being rewatched or reread. Active repeats are excluded from yearly totals because their dates may describe another pass. They do not prove how many episodes or chapters you consumed in that year. Recorded repeat counts appear separately as all-time context; individual repeat dates are unavailable.</p></details><label>Recap period <select value={year} onChange={e => setYear(e.target.value === 'all' ? 'all' : Number(e.target.value))}><option value="all">All time</option>{Array.from({ length: Number(asOf.slice(0,4)) - 1899 }, (_, i) => Number(asOf.slice(0,4)) - i).map(y => <option key={y} value={y}>{y}</option>)}</select></label></div>
     {lists.anime.status === 'done' && lists.manga.status === 'done' && <PersonalRecap avatar={avatar} name={name} key={`recap-${year}`} anime={lists.anime.items} manga={lists.manga.items} period={year} asOf={asOf} />}
     {lists.anime.status === 'done' && lists.manga.status === 'done' && <details className="story-details"><summary>Explore the detailed insights</summary><ListInsights key={`insights-${year}`} anime={lists.anime.items} manga={lists.manga.items} period={year} asOf={asOf} /></details>}

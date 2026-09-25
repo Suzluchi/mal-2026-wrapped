@@ -9,3 +9,5 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return <html lang="en"><body><a className="skip-link" href="#main-content">Skip to content</a>{children}</body></html>;
 }
+
+import './vibrant-recap.css';

@@ -1,0 +1,5 @@
+import { coverURL } from '../../../lib/insights.mjs';
+// Only public MAL raster artwork. No token, cookies, redirects or arbitrary hosts.
+export async function GET(request){const src=coverURL(new URL(request.url).searchParams.get('src'));if(!src||!/^\/images\/(anime|manga|characters|badge|userimages)\//.test(new URL(src).pathname))return new Response('Invalid image',{status:400});
+ try{const r=await fetch(src,{redirect:'error',signal:AbortSignal.timeout(10000)});const type=r.headers.get('content-type')?.split(';')[0];if(!r.ok||!['image/jpeg','image/png','image/webp','image/gif'].includes(type))throw Error();const reader=r.body.getReader(),chunks=[];let size=0;for(;;){const {done,value}=await reader.read();if(done)break;size+=value.length;if(size>4000000){await reader.cancel();throw Error();}chunks.push(value);}return new Response(Buffer.concat(chunks),{headers:{'Content-Type':type,'Cache-Control':'public, max-age=86400','X-Content-Type-Options':'nosniff'}});}catch{return new Response('Image unavailable',{status:502});}
+}

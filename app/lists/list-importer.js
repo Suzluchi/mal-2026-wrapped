@@ -33,6 +33,8 @@ function Summary({ kind, state, year, asOf }) {
   </>;
 }
 export default function ListImporter({ asOf, name, avatar }) {
+  const [badges,setBadges]=useState({status:'loading',items:[]});
+  useEffect(()=>{const c=new AbortController();fetch('/api/badges',{cache:'no-store',signal:c.signal}).then(r=>r.json()).then(x=>{if(!c.signal.aborted)setBadges(x);}).catch(()=>{if(!c.signal.aborted)setBadges({status:'unknown',items:[]});});return()=>c.abort();},[]);
   const [lists, setLists] = useState({ anime: blank, manga: blank });
   const [year, setYear] = useState(Number(asOf.slice(0,4)));
   const controllers = useRef({});
@@ -61,12 +63,12 @@ export default function ListImporter({ asOf, name, avatar }) {
       controllers.current = {};
     };
   }, [start]);
-  const ready=lists.anime.status==='done' && lists.manga.status==='done';
+  const ready=lists.anime.status==='done' && lists.manga.status==='done' && badges.status!=='loading';
   const failed=lists.anime.status==='error' || lists.manga.status==='error';
   return <>
     {!ready && !failed && <JohnLoader animeCount={lists.anime.count} mangaCount={lists.manga.count} animeDone={lists.anime.status==='done'} mangaDone={lists.manga.status==='done'}/>}
-    <div className="list-notice"><details><summary>How dates and repeat counts work</summary><p>MAL lists are a current snapshot, not a complete activity history. Yearly counts use complete finish dates on or before {asOf} (UTC), excluding dates before a recorded start date. All time includes completed titles and titles currently being rewatched or reread. Active repeats are excluded from yearly totals because their dates may describe another pass. They do not prove how many episodes or chapters you consumed in that year. Recorded repeat counts appear separately as all-time context; individual repeat dates are unavailable.</p></details><label>Recap period <select value={year} onChange={e => setYear(e.target.value === 'all' ? 'all' : Number(e.target.value))}><option value="all">All time</option>{Array.from({ length: Number(asOf.slice(0,4)) - 1899 }, (_, i) => Number(asOf.slice(0,4)) - i).map(y => <option key={y} value={y}>{y}</option>)}</select></label></div>
-    {lists.anime.status === 'done' && lists.manga.status === 'done' && <PersonalRecap avatar={avatar} name={name} key={`recap-${year}`} anime={lists.anime.items} manga={lists.manga.items} period={year} asOf={asOf} />}
+    <p>Lists refresh when you reload this page. <button className="button secondary" onClick={()=>window.location.reload()}>Refresh from MAL</button></p><div className="list-notice"><details><summary>How dates and repeat counts work</summary><p>MAL lists are a current snapshot, not a complete activity history. Yearly counts use complete finish dates on or before {asOf} (UTC), excluding dates before a recorded start date. All time includes completed titles and titles currently being rewatched or reread. Active repeats are excluded from yearly totals because their dates may describe another pass. They do not prove how many episodes or chapters you consumed in that year. Recorded repeat counts appear separately as all-time context; individual repeat dates are unavailable.</p></details><label>Recap period <select value={year} onChange={e => setYear(e.target.value === 'all' ? 'all' : Number(e.target.value))}><option value="all">All time</option>{Array.from({ length: Number(asOf.slice(0,4)) - 1899 }, (_, i) => Number(asOf.slice(0,4)) - i).map(y => <option key={y} value={y}>{y}</option>)}</select></label></div>
+    {ready && <PersonalRecap badges={badges} avatar={avatar} name={name} key={`recap-${year}`} anime={lists.anime.items} manga={lists.manga.items} period={year} asOf={asOf} />}
     {lists.anime.status === 'done' && lists.manga.status === 'done' && <details className="story-details"><summary>Explore the detailed insights</summary><ListInsights key={`insights-${year}`} anime={lists.anime.items} manga={lists.manga.items} period={year} asOf={asOf} /></details>}
     {['anime', 'manga'].map(kind => <section className="import-section" key={kind}><div className="import-heading"><h2>{kind === 'anime' ? 'Anime' : 'Manga'}</h2><span>{lists[kind].status === 'error' && <button className="button secondary" onClick={() => start(kind)}>Try again</button>}</span></div>
     <div role="status" aria-live="polite">{lists[kind].status === 'idle' && <p>Getting your list ready…</p>}{lists[kind].status === 'loading' && <p>Loading your list… {lists[kind].count} unique titles received. Large lists can take a little longer.</p>}{lists[kind].status === 'done' && <p>List ready: {lists[kind].count} titles.</p>}</div>

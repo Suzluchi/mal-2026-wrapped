@@ -1,0 +1,51 @@
+/* The user's two supplied faces carry the entire story. */
+.fx-dialog,.fx-dialog button,.fx-scene .fx-title,.cover-pop figcaption,.fx-toolbar,.fx-section>span,.fx-scope,.fx-nav>span,.fx-bottom-hint{font-family:Transcity,Georgia,serif;letter-spacing:0;font-weight:400}
+.fx-card[data-theme]{--ink:#fff6df;--fx:#ffdc52;background:#5020a6;color:var(--ink);overflow:clip}
+.fx-card[data-theme="1"]{--ink:#162214;--fx:#203f18;background:#c4ef54}
+.fx-card[data-theme="2"]{--ink:#fff6df;--fx:#f5ff83;background:#244fce}
+.fx-card[data-theme="3"]{--ink:#361033;--fx:#5b144d;background:#ff9ad3}
+.fx-card[data-theme="4"]{--ink:#202052;--fx:#31298c;background:#b9b0ff}
+.fx-card[data-theme="5"]{--ink:#321d26;--fx:#5f203c;background:#ff986f}
+.fx-card::before{width:45%;height:60%;right:-22%;top:-20%;border:35px solid currentColor;opacity:.09;transform:rotate(25deg);border-radius:20%;animation:scene-shape 12s ease-in-out infinite alternate}
+.fx-card::after{content:'';position:absolute;left:-8%;bottom:-20%;width:28%;aspect-ratio:1;border:28px double currentColor;opacity:.07;border-radius:50%;pointer-events:none}
+.fx-section,.fx-nav>span,.fx-scene .fx-quip,.fx-ranking strong small,.fx-categories small,.fx-repeat-stats span,.keepsake-status{color:var(--ink)}
+.fx-section,.fx-scope,.fx-nav>span{font-size:14px}.fx-progress>span{background:color-mix(in srgb,var(--ink) 25%,transparent)}
+.fx-toolbar{font-size:14px}.fx-toolbar .download-card{width:auto;border-radius:20px;font-size:14px;padding:5px 12px}
+.fx-nav button{color:var(--ink);border-color:currentColor}.fx-scene .fx-quip{font-size:20px;line-height:1.25;max-width:90%}
+.fx-scene .fx-title{font-size:32px}.fx-score small,.fx-ranking strong small,.fx-categories small{font:400 16px Transcity,serif}
+.fx-line{display:block;animation:fx-arrive .5s ease-out both;animation-delay:.38s}.fx-line:nth-child(2){animation-delay:.85s}.fx-line:nth-child(3){animation-delay:1.15s}
+.fx-headline strong{font-family:Peachy,Georgia,serif;font-size:1.25em;margin-top:.12em;font-weight:400!important}
+.fx-card[data-type=question] .fx-quip{animation-delay:1.45s}.fx-question-mark{font-family:Peachy,serif;animation-delay:0s!important}
+.cover-montage{width:100%;min-height:0}.montage-controls{display:flex;justify-content:center;gap:15px;margin-top:8px}.montage-controls button{background:transparent;border:0;border-bottom:1px solid currentColor;color:var(--ink);font-size:13px;padding:3px}
+.cover-pop figcaption{font-size:15px}.cover-pop small{font-size:13px}.cover-pop{gap:12px}.cover-pop figure{flex-basis:16%}
+.taste-portrait{width:150px;aspect-ratio:1;margin:auto;border-radius:50%;background-image:url('/art/taste-portraits.png');background-size:300% 300%;border:3px solid var(--ink)}
+.taste-awards section{border:2px solid var(--ink);border-radius:24px;padding:18px;background:#ffffff15}.taste-awards p{font-size:17px;line-height:1.2}.taste-awards h3{margin:12px 0;font-size:28px}
+.character-portrait{height:240px;aspect-ratio:3/4;object-fit:cover;border:4px solid var(--ink);border-radius:45% 45% 12px 12px;box-shadow:8px 8px 0 var(--fx)}
+.keepsake-actions button{color:var(--ink);border-color:var(--ink);font-family:Transcity,serif}.keepsake-actions button:first-child{background:var(--ink);color:var(--fx)}
+.fx-card[data-type=badges] .pop-image{object-fit:contain;aspect-ratio:1;background:#ffffffbd;padding:8px;box-shadow:none}
+.fx-card[data-exporting] *{animation:none!important;transition:none!important;opacity:1!important;transform:none!important}
+@keyframes scene-shape{to{transform:rotate(50deg) translateY(10%)}}
+@media(min-width:701px){
+ .fx-scene h2,.fx-scene .fx-callout{font-size:clamp(24px,5.5cqh,48px)}
+ .fx-card[data-type=spotlight] .fx-hero-cover{height:54cqh}
+ .fx-scene .fx-title{font-size:clamp(24px,4.8cqh,40px)}.fx-score{font-size:7cqh}
+ .fx-scene .fx-quip{font-size:clamp(16px,3cqh,25px)}
+ .fx-card[data-type=count] .fx-scene{gap:1.2cqh}.fx-card[data-type=count] h2{font-size:4.3cqh}.fx-card[data-type=count] .fx-number{font-size:12cqh}
+ .cover-pop figure{flex-basis:14cqw}.cover-pop figcaption{font-size:clamp(12px,2.3cqh,18px)}.cover-pop small{font-size:2cqh}
+ .fx-ranking li{grid-template-columns:25px 6cqw minmax(0,1fr) 55px;gap:15px}.fx-small-cover{width:6cqw;height:9cqh}.fx-ranking li>div{font-size:clamp(15px,3cqh,24px)}.fx-ranking strong{font:400 4cqh Peachy,serif}
+ .fx-categories{gap:1cqh}.fx-categories li{padding-bottom:1cqh}.fx-categories li>div{font-size:3.7cqh}.fx-categories small{margin-top:3px;font-size:2.3cqh}
+ .taste-portrait{width:20cqh}.taste-awards h3{font-size:4cqh}.taste-awards p{font-size:2.7cqh}
+ .character-portrait{height:32cqh}.character-name{font-size:4.7cqh}.fx-card[data-type=character] .fx-scene{gap:1.2cqh}
+ .keepsake-lists li{font-size:2.7cqh}.keepsake-lists h3{font-size:2.7cqh}.keepsake-status{font-size:12px!important}
+}
+@media(max-width:700px){
+ .fx-section,.fx-scope,.fx-nav>span{font-size:11px}.fx-toolbar{font-size:11px}.fx-toolbar .download-card{font-size:12px;padding:5px 8px}
+ .fx-scene{padding:12px 15px;gap:12px}.fx-scene .fx-quip{font-size:16px}.fx-scene .fx-title{font-size:25px}
+ .cover-pop{flex-wrap:wrap;gap:10px}.cover-pop figure{flex-basis:27%;max-width:90px}.cover-pop figcaption{font-size:11px}.cover-pop small{font-size:11px}
+ .fx-card[data-type=count] .cover-pop figure{flex-basis:25%;max-width:66px}.fx-card[data-type=count] .pop-image{aspect-ratio:3/4}.fx-card[data-type=count] .fx-number{font-size:55px}.fx-card[data-type=count] h2{font-size:24px}.fx-card[data-type=count] .fx-scene{gap:7px}
+ .taste-portrait{width:90px}.taste-awards section{padding:10px 7px}.taste-awards h3{font-size:21px}.taste-awards p{font-size:13px}
+ .character-portrait{height:150px}.character-name{font-size:27px}.fx-categories{gap:8px;margin:0}.fx-categories li{padding-bottom:8px}.fx-categories li>div{font-size:21px}.fx-categories small{font-size:13px;margin-top:3px}
+ .fx-ranking li>div{font-size:13px}.keepsake-lists li{font-size:12px}.keepsake-lists h3{font-size:14px}.keepsake-status{font-size:11px!important}
+}
+@media(prefers-reduced-motion:reduce){.fx-line,.fx-card::before{animation:none!important}}
+.keepsake-lists{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}.keepsake-lists section{min-width:0}.keepsake-lists li{position:relative;padding-right:35px;min-width:0}.keepsake-lists li>span{max-width:100%}.keepsake-lists li>b{position:absolute;right:0;top:0;float:none}.keepsake-actions button:first-child{background:#251337;color:#fff6df}

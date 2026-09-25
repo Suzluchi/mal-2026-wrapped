@@ -5,7 +5,7 @@ import { recap, repeatContext } from '../lib/recap.mjs';
 import { insights, coverURL } from '../lib/insights.mjs';
 import { buildStory } from '../lib/story.mjs';
 const asOf='2026-09-19';
-const item=(id,extra={})=>({id,title:`Title ${id}`,status:'completed',score:8,finishDate:'2026-01-01',...extra});
+const item=(id,extra={})=>({id,title:`Title ${id}`,status:'completed',format:'tv',score:8,finishDate:'2026-01-01',...extra});
 test('repeat fields distinguish missing counts, zero, and active flags for both media',async()=>{
  for(const kind of ['anime','manga']){
   const count=kind==='anime'?'num_times_rewatched':'num_times_reread', flag=kind==='anime'?'is_rewatching':'is_rereading';
@@ -44,13 +44,13 @@ test('covers allow only HTTPS MAL CDN resources',()=>{
  for(const url of ['http://cdn.myanimelist.net/a','https://evil.example/a','javascript:alert(1)','https://user:secret@cdn.myanimelist.net/a']) assert.equal(coverURL(url),null);
 });
 
-test('flashcard story caps rankings at five and categories at three, even with equal scores',()=>{
+test('flashcard story caps rankings at five and categories at five, even with equal scores',()=>{
  const entries=Array.from({length:12},(_,id)=>item(id,{genres:[{id,name:`Genre ${id}`}],studios:[{id,name:`Studio ${id}`}]}));
  const result=buildStory(entries,[],2026,asOf);
  assert.equal(result.slides.find(x=>x.id==='anime-top').items.length,5);
- assert.equal(result.slides.find(x=>x.id==='anime-genres').rows.length,3);
- assert.equal(result.slides.find(x=>x.id==='anime-credits').rows.length,3);
- assert.equal(result.slides.find(x=>x.id==='anime-highest').item.id,0);
+ assert.equal(result.slides.find(x=>x.id==='anime-genres').rows.length,5);
+ assert.equal(result.slides.find(x=>x.id==='anime-credits').rows.length,5);
+ assert.equal(result.slides.find(x=>x.id==='anime-highest').items[0].id,0);
  assert.ok(!result.slides.some(x=>['context','formats','sources','years'].includes(x.type)));
  const q=result.slides.findIndex(x=>x.id==='anime-question');assert.equal(result.slides[q+1].id,'anime-highest');
 });

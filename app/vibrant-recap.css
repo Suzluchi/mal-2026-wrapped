@@ -49,3 +49,24 @@
 }
 @media(prefers-reduced-motion:reduce){.fx-line,.fx-card::before{animation:none!important}}
 .keepsake-lists{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}.keepsake-lists section{min-width:0}.keepsake-lists li{position:relative;padding-right:35px;min-width:0}.keepsake-lists li>span{max-width:100%}.keepsake-lists li>b{position:absolute;right:0;top:0;float:none}.keepsake-actions button:first-child{background:#251337;color:#fff6df}
+.recap-reaction{display:block;flex-shrink:0;height:clamp(75px,18cqh,160px);max-width:65%;overflow:hidden;border-radius:16px;line-height:0;box-shadow:5px 5px 0 #0002;animation:fx-arrive .45s ease both}
+.recap-reaction img{height:100%;width:auto;max-width:100%;object-fit:contain;display:block}
+.recap-reaction .reaction-still{display:none}
+.fx-card[data-exporting] .reaction-live{display:none}
+.fx-card[data-exporting] .reaction-still{display:block}
+.fx-toolbar .motion-control,.fx-toolbar .recap-music{width:auto;border-radius:20px;font:400 12px Transcity,serif;padding:5px 10px;white-space:nowrap}
+.john-runner .recap-reaction{height:110px;max-width:100%;box-shadow:none;border-radius:16px}
+.john-runner .recap-reaction img{width:100%;object-fit:cover}
+@media(max-width:700px){.fx-toolbar{height:auto;min-height:38px;flex-wrap:wrap;gap:5px;padding-bottom:5px}.fx-toolbar>div{gap:5px;flex-wrap:wrap}.fx-toolbar .motion-control,.fx-toolbar .recap-music{font-size:11px;padding:4px 7px}.recap-reaction{height:90px}.fx-card[data-type=number] .fx-number,.fx-card[data-type=month] .fx-number{font-size:60px}}
+@media(prefers-reduced-motion:reduce){.recap-reaction{animation:none}}
+.fx-scene>.recap-reaction{height:clamp(115px,26cqh,230px);max-width:80%}
+.fx-headline.fx-long-haul{width:100%;max-width:100%}
+.fx-long-haul .fx-but{font-family:Peachy,Georgia,serif;font-size:1.85em;white-space:nowrap;animation-delay:0s;margin-bottom:.12em}
+.fx-long-haul .fx-setup{font-size:.82em;animation-delay:.7s}
+.fx-long-haul .fx-payoff{font-size:1.25em;animation-delay:1.4s;margin-top:.2em}
+.fx-long-haul+.fx-quip{animation-delay:2.1s!important}
+@media(max-width:700px){.fx-scene>.recap-reaction{height:145px}.fx-long-haul .fx-but{font-size:1.8em}.fx-long-haul .fx-setup{font-size:.78em}}
+@media(max-height:650px) and (max-width:700px){.fx-scene>.recap-reaction{height:115px}.fx-headline.fx-long-haul{font-size:24px}}
+.fx-toolbar .recap-music{display:block;max-width:175px;overflow:hidden;text-overflow:ellipsis;text-align:left}
+.fx-toolbar .recap-music-next{font-size:20px;width:30px;flex-shrink:0}
+@media(max-width:700px){.fx-toolbar .recap-music{max-width:125px}.fx-toolbar .recap-music-next{width:25px}}

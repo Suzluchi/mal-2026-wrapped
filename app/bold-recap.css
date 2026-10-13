@@ -90,3 +90,11 @@
 }
 @media(prefers-reduced-motion:reduce){.fx-scene [data-beat]{animation:none!important}}
 .fx-card[data-exporting] [data-beat]{animation:none!important;opacity:1!important;transform:none!important}
+
+/* Timing is independent of the quick cover pop animation. */
+.fx-card[data-type=month],.fx-card[data-type=categories],.fx-card[data-type=repeats]{--beat-gap:1s}
+.quip-inline span{display:inline-block;white-space:pre}
+/* Retain full-height portrait covers instead of cropping into landscape tiles. */
+.fx-card:not([data-type=badges]) .pop-image{height:auto;aspect-ratio:2/3;object-fit:cover}
+.fx-card[data-type=spotlight] img.fx-hero-cover{width:auto;height:auto;max-width:100%;max-height:62cqh;background:transparent;object-fit:contain;justify-self:center}
+@media(max-width:700px){.fx-card[data-type=spotlight] img.fx-hero-cover{max-height:30dvh;width:auto;height:auto}.quip-inline span{white-space:normal}}

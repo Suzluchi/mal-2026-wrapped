@@ -12,3 +12,9 @@ Upload the extracted contents of this complete package to the existing repositor
 - Six 40-second music excerpts with 1.5-second crossfades run for 3:52.5. Playback is attempted when the recap opens; if the browser blocks it, the first interaction starts music. Manual pause remains available.
 
 See MUSIC-SELECTIONS.md for excerpt positions and public/reactions/sources.json for GIF sources. No account credentials are included.
+
+## Latest refinement
+
+Cover rotation is restored to 3.4 seconds. Cover rows use 2:3 portraits and spotlight frames fit their artwork. Month, category and repeat totals reveal at one-second intervals. Opening text after the greeting, verdict content after the heading, and manga completion follow-ups use one-second intervals. Question-card pauses remain unchanged. The anime lowest-score quip shares a line, with sentences revealed separately. Music retries on touch release/click and starts directly from the recap-open button. Browser sound restrictions still apply before any interaction.
+
+The running Goku asset and additional songs are awaiting selection/files. The final keepsake redesign is deferred.

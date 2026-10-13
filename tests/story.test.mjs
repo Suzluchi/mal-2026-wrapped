@@ -50,7 +50,7 @@ test('flashcard story caps rankings at five and categories at five, even with eq
  assert.equal(result.slides.find(x=>x.id==='anime-top').items.length,5);
  assert.equal(result.slides.find(x=>x.id==='anime-genres').rows.length,5);
  assert.equal(result.slides.find(x=>x.id==='anime-credits').rows.length,5);
- assert.equal(result.slides.find(x=>x.id==='anime-highest').items[0].id,0);
+ assert.equal(result.slides.find(x=>x.id==='anime-highest').item.id,0);
  assert.ok(!result.slides.some(x=>['context','formats','sources','years'].includes(x.type)));
  const q=result.slides.findIndex(x=>x.id==='anime-question');assert.equal(result.slides[q+1].id,'anime-highest');
 });

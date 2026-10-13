@@ -1,12 +1,14 @@
-# Music and reactions update
+# Recap presentation update
 
 Upload the extracted contents of this complete package to the existing repository, replacing matching files. Keep the existing Vercel environment variables.
 
-- The soundtrack now contains six supplied songs in one 2:52.5 mix, with 30-second excerpts and 1.5-second crossfades. Nemure leads. See MUSIC-SELECTIONS.md for exact excerpt positions. Press the named music button to play or pause, or the next-song arrow to compare tracks. Closing the recap stops playback.
-- Kaijū is removed. Lilac is absent because no file was supplied. Both AiNA and Mrs. GREEN APPLE remain for review. Excerpts were selected using audio energy measurements and still need the user's listening review.
-- John rolls above the import bar. Reaction GIFs accompany questions, monthly activity, scores, repeats, and the empty badge shelf. The complete supplied reaction collection is included for later scene choices.
-- Pause GIFs switches to still frames. Reduced-motion preferences use still frames automatically. Downloaded cards contain still images.
-- The profile-image loader accepts MAL's new signed user-image paths as well as legacy artwork paths.
-- Removed the repeated status captions on anime and manga count cards. Pause covers and More covers remain.
+- Larger typography, profile pictures, covers and reactions throughout the recap.
+- Similar question cards pause two seconds after the opener, then reveal each remaining line at one-second intervals. Other cover cards use one-second intervals; other cards use two seconds.
+- Completed totals and the cover montage now have separate cards. Cover cycling continues without Pause covers or More covers controls.
+- Each assigned reaction GIF appears on only one card. Questions without an appropriate distinct reaction use typography for now. Reduced-motion preferences and still images in downloads remain supported.
+- Highest-score reveals show one title. Anime ranking is TV-only. Ties use recorded repeat counts, repeat preference and personal genre affinity, followed by a stable fallback. Reviews, comments and unrecorded viewing time are not inferred.
+- Official badge messages distinguish zero, earned, and more than ten badges; unavailable data is not treated as zero.
+- Watching and reading energy use list behavior and actual title covers. AI-generated award portraits are no longer displayed. The final keepsake design remains for a later revision.
+- Six 40-second music excerpts with 1.5-second crossfades run for 3:52.5. Playback is attempted when the recap opens; if the browser blocks it, the first interaction starts music. Manual pause remains available.
 
-GIF source links are recorded in public/reactions/sources.json. Music ordering and 30-second excerpt settings live in lib/music.mjs. No account credentials are included in this package.
+See MUSIC-SELECTIONS.md for excerpt positions and public/reactions/sources.json for GIF sources. No account credentials are included.

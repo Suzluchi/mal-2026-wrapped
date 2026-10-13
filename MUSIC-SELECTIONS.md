@@ -1,14 +1,12 @@
-# Soundtrack review
+# Soundtrack
 
-Six 30-second excerpts, normalized to a common target level and joined with 1.5-second crossfades. The mix lasts 2:52.5 and loops during the recap. These are provisional signal-based choices, not verified chorus boundaries.
+Six 40-second excerpts, matched levels and 1.5-second crossfades; 3:52.5 total. Playback attempts automatically when the recap opens; browsers that block sound start on the first user interaction. Manual pause is respected.
 
-| Song | Source excerpt | Starts in mix |
-|---|---|---|
-| Nemure — Creepy Nuts | 0–30s | 0s |
-| AIZO — King Gnu | 173–203s | 28.5s |
-| Kusushiki — Mrs. GREEN APPLE | 86–116s | 57s |
-| Kakumei Dōchū — AiNA THE END | 120–150s | 85.5s |
-| Shinuka Ikiruka — Yuki Chiba | 19–49s | 114s |
-| You Can’t Run From Yourself — AURORA | 59–89s | 142.5s |
+- Nemure: source 0–40s; mix 0s.
+- AIZO: source 173–213s; mix 38.5s.
+- Kusushiki: source 86–126s; mix 77s.
+- Kakumei Dōchū: source 120–160s; mix 115.5s.
+- Shinuka Ikiruka: source 19–59s; mix 154s.
+- You Can’t Run From Yourself: source 59–99s; mix 192.5s.
 
-AIZO uses the corrected KING_GNU_-_AIZO_(mp3.pm) (1).mp3 file (215.89 seconds), replacing the earlier incorrect recording. Nemure uses its opening as requested. Shinuka Ikiruka uses 0:19–0:49 from the supplied MP4, at the user’s requested cue. Kaijū was removed; Lilac was not supplied and is absent. Both AiNA and Mrs. GREEN APPLE remain pending the user’s preference.
+Corrected AIZO recording retained. Shinuka starts at the requested 0:19 cue. Other excerpt choices remain provisional signal-based selections.

@@ -15,7 +15,7 @@ test('the supplied six-song mix has continuous crossfade positions and no Kaiju'
  for(let i=1;i<musicTracks.length;i++)assert.equal(musicTracks[i].start,musicTracks[i-1].start+musicTracks[i-1].duration-musicMix.crossfade);
  assert.equal(musicMix.duration,musicTracks.at(-1).start+musicTracks.at(-1).duration);
 });
-test('every enabled song is present, and Nemure leads with a 30 second opening',()=>{
- assert.equal(musicTracks[0].id,'nemure');assert.equal(musicTracks[0].start,0);assert.equal(musicTracks[0].duration,30);
+test('every enabled song is present, and all excerpts last 40 seconds',()=>{
+ assert.equal(musicTracks[0].id,'nemure');assert.equal(musicTracks[0].start,0);assert.ok(musicTracks.every(t=>t.duration===40));
  for(const track of musicTracks.filter(t=>t.enabled))assert.ok(fs.statSync(new URL('../public'+track.src,import.meta.url)).size>1000);
 });

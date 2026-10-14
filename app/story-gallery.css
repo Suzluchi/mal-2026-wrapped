@@ -1,0 +1,49 @@
+/* Responsive galleries keep their own paging inside a single story card. */
+.fx-scene{overflow:auto;justify-content:safe center;scrollbar-width:thin}
+.fx-scene>*{flex-shrink:0}
+.fx-card[data-paused=true] .fx-scene [data-beat]{animation-play-state:paused!important}
+.fx-progress>span.is-current{background:linear-gradient(to right,var(--fx) calc(var(--story-progress)*100%),#ffffff40 0)}
+.fx-nav{flex-shrink:0;gap:10px}
+.fx-nav .story-next{width:auto;border-radius:22px;font:400 17px Transcity,Georgia,serif;padding:7px 14px;white-space:nowrap}
+.opening-pair span{display:inline-block}
+.fx-card[data-type=spotlight] img.fx-hero-cover{aspect-ratio:auto;width:auto;height:auto;max-width:100%;max-height:62cqh;object-fit:contain;background:transparent}
+.fx-score{display:flex;align-items:baseline;gap:3px;flex-wrap:wrap}
+.fx-score small{display:inline;margin:0;line-height:1}
+.collection-gallery{width:100%;max-width:960px;touch-action:pan-y}
+.collection-grid{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:14px;align-items:start}
+.collection-grid figure{margin:0;min-width:0;display:flex;flex-direction:column;align-items:center;gap:6px}
+.collection-image{display:block;width:100%;aspect-ratio:2/3;object-fit:cover;border-radius:9px;max-height:30cqh}
+.collection-gallery[data-badges=true] .collection-image{aspect-ratio:1;object-fit:contain;background:#ffffff15;padding:6px;max-height:24cqh}
+.collection-grid figcaption{font:400 clamp(14px,2.2cqh,21px)/1.15 Transcity,Georgia,serif;text-align:center;overflow-wrap:anywhere}
+.collection-grid small{font:400 clamp(12px,1.8cqh,18px)/1.2 Transcity,Georgia,serif}
+.collection-controls{display:flex;justify-content:center;align-items:center;gap:15px;margin:16px 0 0;font:400 17px Transcity,Georgia,serif}
+.collection-controls button,.story-all-time{border:1px solid currentColor;color:inherit;background:transparent;border-radius:24px;min-height:44px;padding:7px 14px;font:inherit}
+.collection-controls button:disabled{opacity:.3}
+.fx-card[data-type=badges] .fx-scene,.fx-card[data-type=repeat-covers] .fx-scene{gap:2cqh}
+.fx-card[data-type=badges] .fx-scene h2,.fx-card[data-type=repeat-covers] .fx-scene h2{font-size:clamp(26px,5.5cqh,54px)}
+.fx-card[data-type=badges] .fx-quip,.fx-card[data-type=repeat-covers] .fx-quip{font-size:clamp(20px,3.3cqh,32px)}
+@media(max-width:1000px){
+ .collection-grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:14px 12px}
+ .collection-image{width:auto;max-width:100%;height:clamp(85px,17dvh,150px);max-height:none}
+ .collection-gallery[data-badges=true] .collection-image{width:100%;height:clamp(70px,12dvh,110px);max-height:none}
+}
+@media(max-width:700px){
+ .fx-scene{padding:18px 15px;gap:12px}
+ .fx-card[data-type=badges] .fx-scene,.fx-card[data-type=repeat-covers] .fx-scene{justify-content:flex-start;gap:14px}
+ .fx-card[data-type=badges] .fx-scene h2,.fx-card[data-type=repeat-covers] .fx-scene h2{font-size:28px}
+ .fx-card[data-type=badges] .fx-unit,.fx-card[data-type=repeat-covers] .fx-unit{font-size:19px}
+ .fx-card[data-type=badges] .fx-quip,.fx-card[data-type=repeat-covers] .fx-quip{font-size:21px}
+ .collection-grid figcaption{font-size:14px}.collection-grid small{font-size:12px}
+ .collection-controls{font-size:15px;margin-top:14px}
+ .fx-card[data-type=spotlight] img.fx-hero-cover{max-height:30dvh;aspect-ratio:auto}
+ .fx-score{justify-content:center}
+ .fx-toolbar{height:auto;min-height:38px;gap:8px;flex-wrap:wrap}.fx-toolbar>div{flex-wrap:wrap;gap:6px}
+ .fx-nav>span{font-size:10px}.fx-nav .story-next{font-size:15px}
+ .fx-card[data-type=awards] .taste-awards{flex-wrap:wrap}.taste-awards section{min-width:0}
+}
+.goku-run-sprite{width:108px;height:122px;background:url('/sprites/kid-goku-run.png') 0 -124px/434px 246px no-repeat;image-rendering:pixelated;filter:url(#goku-white-key);animation:goku-run .48s steps(4) infinite}
+@keyframes goku-run{to{background-position:-432px -124px}}
+@media(prefers-reduced-motion:reduce){.goku-run-sprite{animation:none}}
+@media(min-width:701px) and (max-width:1000px) and (orientation:portrait){
+ .fx-card[data-type=badges],.fx-card[data-type=repeat-covers]{aspect-ratio:auto;height:min(900px,calc(100dvh - 100px))}
+}

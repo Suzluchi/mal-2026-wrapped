@@ -13,3 +13,5 @@ export default function RootLayout({ children }) {
 import './vibrant-recap.css';
 
 import './bold-recap.css';
+
+import './story-gallery.css';

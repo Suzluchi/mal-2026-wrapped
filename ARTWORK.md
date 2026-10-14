@@ -1,6 +1,6 @@
 # Artwork notes
 
-John uses the rolling GIF supplied by the user. Supplied GIF URLs are recorded in public/reactions/sources.json. PNG versions are first-frame stills for reduced motion and card exports.
+The loader uses the user-supplied Kid Goku walking/running sprite sheet. The filename credits krystaldragonx546; no ownership is claimed. The original file is in public/sprites/kid-goku-run.png. A display filter removes white; the source pixels are unchanged. Supplied GIF URLs are recorded in public/reactions/sources.json. PNG versions are first-frame stills for reduced motion and card exports.
 
 Award cards use CSS symbols. Watching and reading energy cards display covers from the user's list. The older generated portrait atlas and character-image metadata are unused legacy assets, not displayed by the recap. Fictional demo covers are original SVG assets.
 

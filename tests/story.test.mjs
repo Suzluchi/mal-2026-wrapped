@@ -59,6 +59,7 @@ test('repeat covers retain lifetime records while count covers respect the selec
  const entries=[item(1,{finishDate:'2025-01-01',repeatCount:3,cover:'https://cdn.myanimelist.net/a.jpg'}),item(2,{repeatCount:0}),item(3,{isRepeating:true,repeatCount:null})];
  const story=buildStory(entries,[],2026,asOf);
  assert.deepEqual(story.slides.find(x=>x.id==='anime-count').items.map(x=>x.id),[2]);
- assert.deepEqual(story.slides.find(x=>x.id==='anime-repeat-covers').items.map(x=>x.id),[1,3]);
+ assert.deepEqual(story.slides.find(x=>x.id==='repeat-gallery').items.map(x=>x.id),[1,3]);
  assert.ok(!story.slides.some(x=>x.id==='manga-repeat-covers'));
 });
+

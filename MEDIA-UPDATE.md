@@ -1,17 +1,22 @@
-# Story playback and galleries update
+# Discoveries and keepsake update
 
-Extract the ZIP. Copy its contents into the GitHub Desktop repository folder, merging matching folders. Commit and Push origin. Do not copy the outer ZIP folder into the repository.
+Copy the extracted ZIP contents into the GitHub Desktop repository folder, merging matching folders. Commit and Push origin. Do not copy the ZIP itself or an extra enclosing folder into the repository.
 
-- Start my Wrapped opens the recap and starts audio in the same click. The recap no longer opens itself before user interaction.
-- Ordinary cards advance one second after the final entrance animation. Looping cover cards, repeat/badge galleries, empty-data guidance and the keepsake wait for the reader. Pause story, information, export and background tabs pause progression.
-- Cover groups rotate every 2.1 seconds. Individual cover entrances are unchanged.
-- One combined rewatch/reread card and one official badge card contain every item, with six items per gallery page and swipe/arrow browsing. Gallery navigation does not advance the story.
-- Responsive gallery grids and overflow handling prevent captions from colliding. Spotlight image frames now use natural proportions; /10 stays beside the score. The scores and The binges share a line and arrive separately.
-- Empty/unrated/single-medium accounts omit unsupported sections. Unknown repeat and badge data is distinguished from confirmed zero. Undated completions can be viewed through the All time button.
-- The supplied Kid Goku sprite replaces John on the loading bar. Its bottom four frames animate with crisp pixels; reduced motion uses a still frame. The source PNG is unchanged; display filtering removes its white backdrop.
+## Included
+- User-approved table wording: Someday Shelf, Crown Jewel, Disappointments Department, Your Binge Era, Author Obsession, Manga Mountain, and The Long Haul. Existing selected lines remain intact.
+- Currently reading and completed manga both inform rating rankings, average scores, author/genre summaries, reading energy and catalogue-length selection. Completion totals and busiest months remain completion-only. Completed manga receive 1.25 weight in author/genre summaries; ratings remain primary, with completion status an equal-score tie-breaker.
+- Annual currently-reading manga requires a valid recorded start in that year. All-time includes undated reading titles. We do not infer dated reading activity from generic update timestamps.
+- Anime Era (median release year, five-title minimum); You vs. Everyone (five comparable scores minimum); Plot Twist (eight rated titles and a rare-genre high scorer); Hidden Gem Hunter (one personal 8+ favourite, maximum 50k anime / 20k manga community list members). Insufficient evidence omits the card. Community figures are current snapshots, not historical.
+- One combined Anime/Manga Graveyard, up to five circular covers per medium and an exact 'and N more' count. Dropped only, never on-hold/planned. Drop dates are not supplied by the present MAL list import, so normal yearly recaps omit undated drops and All-time labels their dates unknown. The internal model supports verified drop dates if available in future; it never substitutes last-updated dates.
+- Navy keepsake based on the approved top-section layout: profile, actual Anime Era result, blended character art, completion/current-reading counts, top-five columns, personalised energy titles without category labels, and actual hidden-gem titles. No fabricated watch/reading hours.
+- Favourite character comes from the first successfully parsed public MAL profile character favourite. Profile failures leave a neutral background; no arbitrary character is substituted. City/ocean/mountain themes are selected for supported names, abstract fallback for others. Public MAL portrait artwork is blended, not AI-regenerated.
+- Download image / Share capture the same keepsake DOM shown to the user, excluding controls, replacing the old independent canvas template. Responsive exports reflect the displayed layout.
+- Automatic story dwell is now 1.2 seconds after the final reveal. Galleries remain manual. Cover rotation waits for the initial reveal and preloads incoming images; intended group interval remains 2.1 seconds, with a bounded loading delay on slow networks.
 
-Validation: 64 automated checks plus production build. Browser checks covered the start/music flow, automatic progression stopping at cover cards, mobile repeat galleries, tablet badge layout and gallery navigation. Test collection sizes included 14 repeats and 19 badges.
+## Verification
+73 automated tests passed before the final build, with regression cases for ongoing manga, missing dates, rating thresholds, one combined graveyard, capped collections, and favourite parsing. Public profile parsing was verified against a live profile with ten favourites. A browser comparison showed the new exported PNG matches the displayed navy layout, lists, fonts and signatures. Browser image retry was added after a transient upstream artwork timeout.
 
-The two-medium sample's automatic sections total approximately 2 minutes 36 seconds, excluding manual browsing, pauses and skips. Typical browsing can bring that to 4–6 minutes; there is no maximum while cards wait for the reader. The six-song soundtrack is still 3:52.5. Additional songs have not yet been supplied.
+Remaining visual QA: the final phone/tablet graveyard check and visual confirmation of the adjusted initial cover animation were interrupted by the browser automatic approval review hitting the account usage limit. They must not be described as passed. Temporary QA route is excluded from the deliverable.
 
-The final keepsake redesign and later GIF reassignment remain deferred.
+## Still deferred
+Additional music files, final GIF reassignment, and the broader website typography/design pass.

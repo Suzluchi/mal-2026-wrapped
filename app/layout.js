@@ -15,3 +15,5 @@ import './vibrant-recap.css';
 import './bold-recap.css';
 
 import './story-gallery.css';
+
+import './discovery-keepsake.css';

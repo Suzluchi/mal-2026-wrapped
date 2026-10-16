@@ -3,7 +3,7 @@ import { useState } from 'react';
 import SiteHeader, { SiteFooter } from '../components/site-header';
 import PersonalRecap from '../lists/personal-recap';
 const titles=[['The Last Train','last-train',10,12,2024],['Paper Satellites','paper-satellites',9,24,2022],['The Blue Hour','blue-hour',8,13,1998],['Sea of Sundays','sunday-sea',8,26,2010],['Field Notes from Tomorrow','field-notes',7,12,2020],['Someone Left the Stars On','star-lights',6,6,2025]];
-const make=(row,index,kind)=>({id:index+1,title:row[0],cover:`/art/${row[1]}.svg`,isSample:true,status:'completed',score:row[2],finishDate:`2026-${String(index+1).padStart(2,'0')}-12`,startDate:'2026-01-01',length:row[3],releaseYear:row[4],genres:[{id:index%2+1,name:index%2?'Adventure':'Drama'}],studios:[{id:1,name:'Fictional Studio North'}],creators:[{id:1,name:'Fictional Creator A'}],format:kind==='anime'?'tv':'manga',source:'original',repeatCount:index===0?2:0,isRepeating:false});
+const make=(row,index,kind)=>({id:index+1,title:row[0],cover:`/art/${row[1]}.svg`,isSample:true,status:'completed',score:row[2],communityScore:7.1,audience:index===0?12000:200000,finishDate:`2026-${String(index+1).padStart(2,'0')}-12`,startDate:'2026-01-01',length:row[3],releaseYear:row[4],genres:[{id:index%2+1,name:index%2?'Adventure':'Drama'}],studios:[{id:1,name:'Fictional Studio North'}],creators:[{id:1,name:'Fictional Creator A'}],format:kind==='anime'?'tv':'manga',source:'original',repeatCount:index===0?2:0,isRepeating:false});
 const anime=titles.map((row,i)=>make(row,i,'anime'));
 const manga=titles.slice(1,5).map((row,i)=>make(row,i,'manga'));
 export default function Demo() {

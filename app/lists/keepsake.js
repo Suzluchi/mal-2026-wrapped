@@ -1,31 +1,30 @@
 'use client';
-import { useState } from 'react';
-function summaryText({data,name,period}){
- return `${name||'My'} · ${period==='all'?'All-time':period} MAL Wrapped\n${data.anime.count} anime completed · ${data.manga.count} manga completed\n\n`+['anime','manga'].map(k=>`Top ${k}\n`+(k==='anime'?data.anime.tv:data.manga).top.slice(0,5).map((x,i)=>`${i+1}. ${x.title} — ${x.score}/10`).join('\n')).join('\n\n');
+import {useRef,useState} from 'react';
+import {toBlob} from '../../lib/vendor/index.js';
+import {personalRanking} from '../../lib/personal-ranking.mjs';
+import {characterScene} from '../../lib/favourites.mjs';
+const source=src=>src?.startsWith('https://cdn.myanimelist.net/')?'/api/image?src='+encodeURIComponent(src):src;
+export function Backdrop({scene}){
+ return <svg className="keepsake-landscape" viewBox="0 0 800 430" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><defs><linearGradient id="sky" x2="0" y2="1"><stop stopColor="#303c85"/><stop offset=".65" stopColor="#775578"/><stop offset="1" stopColor="#d58d85"/></linearGradient></defs><rect width="800" height="430" fill="url(#sky)"/><circle cx="620" cy="120" r="53" fill="#eec6b5" opacity=".6"/>{scene==='city'?<><path d="M0 430V230H70V170H110V210H160V110H185V50H190V110H210V270H250V190H285V250H325V145H390V240H420V180H460V280H500V210H540V125H595V260H640V170H710V230H760V160H800V430Z" fill="#121d43"/>{Array.from({length:18},(_,i)=><path key={i} d={`M${20+i*44} 290v8m0 12v8m0 12v8m0 12v8`} stroke="#e8b681" strokeWidth="7" opacity=".65"/>)}</>:scene==='ocean'?<><path d="M0 270Q150 235 320 270T800 270V430H0Z" fill="#223d66"/><path d="M0 310Q150 280 320 310T800 310M0 355Q150 325 320 355T800 355" fill="none" stroke="#798dc0" strokeWidth="4" opacity=".6"/></>:<><path d="M0 350L160 120L310 320L470 70L650 310L760 150L800 230V430H0Z" fill="#333e68"/><path d="M0 400L180 260L360 410L590 210L800 390V430H0Z" fill="#15233f"/></>}<path d="M30 0V430M320 0V430M730 0V430M0 360H800" stroke="#080f27" strokeWidth="12" opacity={scene==='city'?'.7':'0'}/></svg>;
 }
-async function makeImage({data,name,period,awards,sample}){
- await document.fonts.ready;
- const canvas=document.createElement('canvas');canvas.width=1600;canvas.height=1200;
- const c=canvas.getContext('2d');if(!c)throw new Error('Canvas unavailable');
- c.fillStyle='#171d29';c.fillRect(0,0,1600,1200);c.fillStyle='#ffcfa6';c.fillRect(0,0,22,1200);
- c.strokeStyle='#ffffff26';c.lineWidth=2;c.strokeRect(55,55,1490,1090);
- const line=(text,x,y,max,font,color='#f4eee8')=>{c.font=font;c.fillStyle=color;let t=String(text);while(c.measureText(t).width>max&&t.length>1)t=t.slice(0,-2);c.fillText(t===String(text)?t:t+'…',x,y);};
- line(sample?'FICTIONAL SAMPLE / MAL WRAPPED':'MAL WRAPPED / YOUR KEEPSAKE',100,120,1400,'22px Transcity','#ffcfa6');
- line(name||'Your story',100,205,1390,'56px Transcity, Georgia');
- line(`${period==='all'?'ALL TIME':period} · THE RECEIPTS ARE YOURS.`,100,270,1390,'38px Transcity, Georgia');
- ['anime','manga'].forEach((k,col)=>{const x=100+col*735;line(`TOP ${k.toUpperCase()}`,x,365,650,'25px Transcity','#ffcfa6');const items=(k==='anime'?data.anime.tv:data.manga).top.slice(0,5);if(!items.length)line('No rated completions',x,425,650,'26px Transcity');items.forEach((item,i)=>{line(`${i+1}. ${item.title}`,x,425+i*75,550,'27px Transcity');line(`${item.score}/10`,x+560,425+i*75,100,'26px Transcity','#ffcfa6');});});
- line(`${data.anime.count}`,100,915,620,'82px Peachy, Georgia','#ffcfa6');line('ANIME COMPLETED',100,960,620,'22px Transcity');line(`${data.manga.count}`,835,915,620,'82px Peachy, Georgia','#d5b8ff');line('MANGA COMPLETED',835,960,620,'22px Transcity');
- line(awards.map(a=>a.title).join(' · '),100,1035,1380,'26px Transcity, Georgia');line('Recorded completions · current scores · mal-2026-wrapped.vercel.app',100,1100,1400,'21px Transcity','#b6b5c3');
- return new Promise((resolve,reject)=>canvas.toBlob(b=>b?resolve(b):reject(new Error('Export failed')),'image/png'));
-}
-export default function Keepsake(props){
- const {data,name,avatar,period,awards=[],sample}=props;
- const [busy,setBusy]=useState(false),[message,setMessage]=useState('');
+function Art({src,alt,className}){const [attempt,setAttempt]=useState(0);const url=source(src);return src&&attempt<2?<img className={className} src={attempt&&url.startsWith('/api/image?')?url+'&retry=1':url} alt={alt} onError={()=>setAttempt(n=>n+1)}/>:null;}
+export default function Keepsake({data,name,avatar,period,awards=[],sample,favourite}){
+ const poster=useRef(null),[busy,setBusy]=useState(false),[message,setMessage]=useState('');
+ const era=data.discoveries?.anime?.era;
+ const sections=['anime','manga'].filter(k=>data[k].tasteCount>0||data[k].current>0);
+ const gems=['anime','manga'].flatMap(k=>data.discoveries?.[k]?.gem?[{kind:k,...data.discoveries[k].gem}]:[]);
+ const rankings=Object.fromEntries(sections.map(k=>[k,((k==='anime'?data.anime.tv:data.manga).showcase||personalRanking((k==='anime'?data.anime.tv:data.manga).top)).slice(0,5)]));
+ const text=()=>`${name||'My'} · ${period==='all'?'All-time':period} MAL Wrapped\n${data.anime.count} anime completed · ${data.manga.count} manga completed\n`+sections.map(k=>`\nTop ${k}\n${rankings[k].map((x,i)=>`${i+1}. ${x.title} — ${x.score}/10`).join('\n')}`).join('\n')+`\n${awards.map(a=>a.title).join(' · ')}\n`+gems.map(g=>`Hidden gem: ${g.item.title}`).join('\n');
  async function act(mode){setBusy(true);setMessage('');try{
-  if(mode==='copy'){await navigator.clipboard.writeText(summaryText(props));setMessage('Summary copied.');return;}
-  const blob=await makeImage(props),file=new File([blob],`mal-wrapped-${period}.png`,{type:'image/png'});
+  if(mode==='copy'){await navigator.clipboard.writeText(text());setMessage('Summary copied.');return;}
+  await document.fonts.ready;
+  await Promise.all([...poster.current.querySelectorAll('img')].map(img=>img.decode?.().catch(()=>{})));
+  // Export the very same DOM and computed styles the reader sees, not a second drawing template.
+  const blob=await toBlob(poster.current,{pixelRatio:2,cacheBust:false,backgroundColor:'#0a1232',height:poster.current.clientHeight});
+  if(!blob)throw Error('Export failed');
+  const file=new File([blob],`mal-wrapped-${period}.png`,{type:'image/png'});
   if(mode==='share'&&navigator.canShare?.({files:[file]})&&navigator.share){await navigator.share({files:[file],title:'My MAL Wrapped'});setMessage('Share menu closed.');}
-  else {const url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download=file.name;document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),30000);setMessage(mode==='share'?'Image downloaded—attach it in your favourite app.':'Your recap image is downloaded.');}
- }catch(e){setMessage(e.name==='AbortError'?'Sharing cancelled.':'Could not complete that action. Try downloading or copying the summary.');}finally{setBusy(false);}}
- return <div className="keepsake"><header>{avatar&&<img src={avatar.startsWith('https://cdn.myanimelist.net/')?'/api/image?src='+encodeURIComponent(avatar):avatar} alt="" referrerPolicy="no-referrer"/>}<div><p className="fx-scope">{sample?'FICTIONAL SAMPLE':'YOUR KEEPSAKE'} / {period==='all'?'ALL TIME':period}</p><h2>{name||'Your'} Wrapped.</h2></div></header><div className="keepsake-stats"><span><b>{data.anime.count}</b> anime completed</span><span><b>{data.manga.count}</b> manga completed</span></div><div className="keepsake-lists">{['anime','manga'].map(k=><section key={k}><h3>Top {k==='anime'?'TV anime':k}</h3>{(k==='anime'?data.anime.tv:data.manga).top.length?<ol>{(k==='anime'?data.anime.tv:data.manga).top.slice(0,5).map(x=><li key={x.id}><span title={x.title}>{x.title}</span><b>{x.score}<small>/10</small></b></li>)}</ol>:<p>No rated completions.</p>}</section>)}</div>{awards.length>0&&<p className="keepsake-awards">{awards.map(x=>x.title).join(' · ')}</p>}<div className="keepsake-actions"><button disabled={busy} onClick={()=>act('download')}>Download image</button><button disabled={busy} onClick={()=>act('share')}>Share</button><button disabled={busy} onClick={()=>act('copy')}>Copy summary</button></div><p role="status" className="keepsake-status">{message||'Share only when you’re ready. Your list stays private until you choose.'}</p></div>;
+  else{const url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download=file.name;document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),30000);setMessage('Your keepsake image is downloaded.');}
+ }catch(e){setMessage(e.name==='AbortError'?'Sharing cancelled.':'Could not save the image. Please try again.');}finally{setBusy(false);}}
+ return <div className="keepsake-wrap"><article className="keepsake-poster" ref={poster} aria-label="Your downloadable keepsake"><div className="keepsake-hero"><div className="keepsake-scene-art" data-scene={characterScene(favourite)}><Backdrop scene={characterScene(favourite)}/>{favourite?.cover&&<Art src={favourite.cover} alt={favourite.name} className="keepsake-character"/>}</div><div className="keepsake-identity"><Art src={avatar} alt="" className="keepsake-avatar"/><div><p>{sample?'FICTIONAL SAMPLE':'YOUR KEEPSAKE'} / {period==='all'?'ALL TIME':period}</p><h2>{name||'Your story'}</h2><p>MyAnimeList <em>Wrapped {period==='all'?'· All Time':period}</em></p></div></div><div className="keepsake-era"><h3>{era?'YOUR ANIME ERA':'YOUR STORY'}</h3><strong>{era?era.year:period==='all'?'ALL TIME':period}</strong>{era&&<p>{era.line}</p>}</div></div><div className="keepsake-totals">{sections.map(k=><div key={k}><strong>{data[k].count}</strong><span>{k.toUpperCase()} COMPLETED</span></div>)}{sections.includes('manga')&&data.manga.current>0&&<div><strong>{data.manga.current}</strong><span>CURRENTLY READING</span></div>}{!sections.length&&<p>Your next favourite is still waiting.</p>}</div><div className="keepsake-top" data-single={sections.length===1}>{sections.map(k=><section key={k}><h3>{rankings[k].length?`TOP ${rankings[k].length} ${k==='anime'?'TV ANIME':'MANGA'}`:k.toUpperCase()}</h3>{rankings[k].length?<ol>{rankings[k].map(x=><li key={x.id}><span>{x.title}</span><b>{x.score}<small>/10</small></b></li>)}</ol>:<p>Your stories do not need a score to count.</p>}</section>)}</div><div className="keepsake-signatures">{awards.length>0&&<p className="signature-titles">{awards.map(x=>x.title).join(' · ')}</p>}{gems.map(g=><p className="signature-gem" key={g.kind}><span>HIDDEN GEM · {g.kind.toUpperCase()}</span><b>{g.item.title}</b><small>Not everyone found this one. You did.</small></p>)}</div><footer><span>YOUR STORY, YOURS TO KEEP.</span><b>MAL WRAPPED</b></footer></article><div className="keepsake-actions" data-gallery="true"><button disabled={busy} onClick={()=>act('download')}>{busy?'Saving…':'Download image'}</button><button disabled={busy} onClick={()=>act('share')}>Share</button><button disabled={busy} onClick={()=>act('copy')}>Copy summary</button></div><p className="keepsake-status" role="status">{message}</p></div>;
 }

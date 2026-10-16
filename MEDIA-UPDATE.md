@@ -29,3 +29,13 @@ Additional music files, final GIF reassignment, and the broader website typograp
 - Cover rotation preloads the next group during the current round, removing the image-loading delay formerly added after 2.1 seconds. Initial reveal timing and individual pop animation unchanged.
 - Discovery captions use Transcity; rating denominators stay beside their scores. Campaign eligibility labels are omitted from the highest-score genre caption.
 - Verified phone (390px) and tablet (820px) reflow, five background options, and a downloaded orange-sky phone PNG with matching text, background, fonts, character and full footer.
+# 16 October — music, reactions and readability update
+
+All six newly supplied songs are included. The mix is 6:48.5 with 1.5-second crossfades. Excerpts are 35 seconds except the unchanged 40-second Steel Ball Run excerpt. New tracks start at the beginning; previous starting points are preserved.
+
+The final manga chapters reaction uses the user's downloaded `satoru-gojo-high-gojo-high.gif`. New GIFs have static first frames for pause/reduced motion. Okabe now accompanies Anime Era. Existing unrelated assignments remain unchanged.
+
+Discovery cards now use enlarged side-by-side art and copy, separate sentence entrances, and inline score denominators. Hidden Gem eligibility details and community calculation context remain available in the information panel rather than small on-card footers.
+
+Keepsake character choices come from the actual user's favourites. All-time days come from MAL profile statistics when available; yearly days remain labelled estimates. The same poster DOM is still used for the download.
+

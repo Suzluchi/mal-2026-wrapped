@@ -88,5 +88,39 @@
     "source": "https://tenor.com/iU8ErB1J4Q7.gif",
     "resolved": "https://media1.tenor.com/m/ZgGKI_qr9F8AAAAC/given-anime-given-mafuyu.gif",
     "bytes": 2036213
+  },
+  {
+    "id": "completed-new",
+    "source": "https://media2.giphy.com/media/plo9vLee5OHKcU0XWI/giphy.gif",
+    "bytes": 544152
+  },
+  {
+    "id": "verdict-anime",
+    "source": "https://tenor.com/dlbWGQW2zDv.gif",
+    "bytes": 203665
+  },
+  {
+    "id": "verdict-manga",
+    "source": "https://tenor.com/bihsb.gif",
+    "resolved": "https://media1.tenor.com/m/RQT54zUPUHcAAAAC/gau-hammer-judge.gif",
+    "bytes": 3981471
+  },
+  {
+    "id": "longhaul-anime",
+    "source": "https://media.tenor.com/EKzpSjOa2DIAAAAM/anime-anger.gif",
+    "bytes": 155722
+  },
+  {
+    "id": "longhaul-alternative",
+    "source": "https://media.giphy.com/media/kQ3FSVoJrkYWk/giphy.gif",
+    "resolved": "https://media.giphy.com/media/kQ3FSVoJrkYWk/giphy.gif",
+    "bytes": 935354
+  },
+  {
+    "id": "chapters-days",
+    "source": "https://tenor.com/iaH0iRDAues.gif",
+    "bytes": 1656689,
+    "suppliedFile": "satoru-gojo-high-gojo-high.gif",
+    "resolved": "user-provided local file"
   }
 ]

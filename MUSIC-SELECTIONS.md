@@ -1,12 +1,16 @@
 # Soundtrack
 
-Six 40-second excerpts, matched levels and 1.5-second crossfades; 3:52.5 total. Playback attempts automatically when the recap opens; browsers that block sound start on the first user interaction. Manual pause is respected.
+12 tracks: eleven 35-second excerpts plus the unchanged 40-second Steel Ball Run cut from 0:19. New songs start at 0:00. Existing source cues are retained. 1.5-second crossfades; 408.5 seconds total.
 
-- Nemure: source 0–40s; mix 0s.
-- AIZO: source 173–213s; mix 38.5s.
-- Kusushiki: source 86–126s; mix 77s.
-- Kakumei Dōchū: source 120–160s; mix 115.5s.
-- Shinuka Ikiruka: source 19–59s; mix 154s.
-- You Can’t Run From Yourself: source 59–99s; mix 192.5s.
-
-Corrected AIZO recording retained. Shinuka starts at the requested 0:19 cue. Other excerpt choices remain provisional signal-based selections.
+- Nemure: source 0–35s; mix starts 0s.
+- AIZO: source 173–208s; mix starts 33.5s.
+- Kusushiki: source 86–121s; mix starts 67.0s.
+- Kakumei Dōchū: source 120–155s; mix starts 100.5s.
+- Shinuka Ikiruka: source 19–59s; mix starts 134.0s.
+- You Can’t Run From Yourself: source 59–94s; mix starts 172.5s.
+- Hyakka Ryouran: source 0–35s; mix starts 206.0s.
+- Invincible: source 0–35s; mix starts 239.5s.
+- more than words: source 0–35s; mix starts 273.0s.
+- SPECIALZ: source 0–35s; mix starts 306.5s.
+- TEST ME: source 0–35s; mix starts 340.0s.
+- Outlaws Get No Entry: source 0–35s; mix starts 373.5s.

@@ -9,13 +9,15 @@ test('signed new MAL avatars and legacy artwork are accepted without widening ho
  assert.ok(imageSource('https://cdn.myanimelist.net/images/anime/1/23.jpg'));
  for(const bad of ['https://example.com/s/common/userimages/a','http://cdn.myanimelist.net/images/anime/a','https://cdn.myanimelist.net/private/a','https://x@cdn.myanimelist.net/images/anime/a','https://cdn.myanimelist.net/s/common/userimages/../../secret'])assert.equal(imageSource(bad),null);
 });
-test('the supplied six-song mix has continuous crossfade positions and no Kaiju',()=>{
- assert.equal(musicTracks.length,6);
+test('the supplied twelve-song mix has continuous crossfade positions',()=>{
+ assert.equal(musicTracks.length,12);
  assert.ok(!musicTracks.some(t=>t.id==='kaiju'||t.id==='lilac'));
  for(let i=1;i<musicTracks.length;i++)assert.equal(musicTracks[i].start,musicTracks[i-1].start+musicTracks[i-1].duration-musicMix.crossfade);
  assert.equal(musicMix.duration,musicTracks.at(-1).start+musicTracks.at(-1).duration);
 });
-test('every enabled song is present, and all excerpts last 40 seconds',()=>{
- assert.equal(musicTracks[0].id,'nemure');assert.equal(musicTracks[0].start,0);assert.ok(musicTracks.every(t=>t.duration===40));
+test('all excerpts last 35 seconds except the preserved Steel Ball Run cut',()=>{
+ assert.equal(musicTracks[0].id,'nemure');assert.equal(musicTracks[0].start,0);assert.ok(musicTracks.every(t=>t.duration===(t.id==='shinuka-ikiruka'?40:35)));
+ assert.equal(musicTracks.find(t=>t.id==='shinuka-ikiruka').sourceStart,19);
+ assert.ok(musicTracks.slice(6).every(t=>t.sourceStart===0));
  for(const track of musicTracks.filter(t=>t.enabled))assert.ok(fs.statSync(new URL('../public'+track.src,import.meta.url)).size>1000);
 });

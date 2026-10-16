@@ -73,3 +73,21 @@
 .keepsake-character-frame.is-cutout .keepsake-character{top:-90.91%;clip-path:polygon(64% 47%,68% 44%,74% 44%,80% 47%,84% 51%,87% 57%,85% 63%,84% 66%,89% 70%,94% 75%,99% 82%,99% 91%,54% 91%,56% 81%,59% 76%,62% 72%,65% 69%,63% 63%,62% 57%,63% 52%)}
 @media(max-width:700px){.keepsake-character-frame.is-cutout{top:26%;width:63%;height:auto}}
 .keepsake-character-frame.is-cutout .keepsake-character{clip-path:polygon(70% 43%,77% 44%,83% 49%,86% 55%,86% 61%,84% 66%,90% 72%,99% 82%,99% 92%,54% 92%,55% 82%,61% 74%,65% 69%,64% 64%,63% 58%,64% 52%,67% 47%)}
+
+/* Readable discoveries: each piece enters independently and copy sits beside art. */
+.fx-card[data-type=discovery]{--beat-gap:1s}
+.fx-card[data-type=discovery] .fx-scene{justify-content:flex-start;gap:18px;padding-top:5cqh;overflow-y:auto}
+.fx-card[data-type=discovery] .fx-scene>h2{font-size:clamp(32px,5.5cqw,64px);margin:0 0 18px}
+.discovery-feature{width:100%;max-width:1100px;gap:clamp(24px,5cqw,70px);align-items:center}
+.discovery-art{flex:0 0 34%;min-width:0}.discovery-art img{display:block;width:100%;max-height:55cqh;object-fit:contain;border-radius:16px}
+.discovery-copy{flex:1;min-width:0}.discovery-copy h3{font-size:clamp(30px,4cqw,52px);line-height:1.15}
+.discovery-copy strong{font-size:clamp(70px,11cqh,115px)}.discovery-copy strong small{font-size:.35em}
+.fx-scene .discovery-copy p{font:400 clamp(22px,2.7cqw,34px)/1.35 Transcity,Georgia,serif;margin:12px 0;overflow-wrap:anywhere}
+.fx-card[data-type=discovery] .reaction-stage{height:18cqh;min-height:95px}.fx-card[data-type=discovery] .reaction-stage img{max-height:100%}
+.graveyard-covers figcaption{font-size:clamp(18px,2cqw,25px)}.graveyard-covers small{font-size:16px}.fx-scene .discovery-note{font-size:18px}
+@media(max-width:700px){
+ .fx-card[data-type=discovery] .fx-scene{padding-top:28px;gap:12px}.fx-card[data-type=discovery] .fx-scene>h2{font-size:32px;margin-bottom:8px}
+ .discovery-feature{gap:18px;align-items:flex-start}.discovery-art{flex-basis:34%}.discovery-art img{width:100%;max-height:300px}
+ .discovery-copy h3{font-size:28px}.discovery-copy strong{font-size:64px}.fx-scene .discovery-copy p{font-size:21px;line-height:1.3}
+ .graveyard-covers figcaption{font-size:18px}.graveyard-covers small{font-size:15px}
+}

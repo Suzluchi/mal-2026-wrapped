@@ -16,17 +16,22 @@ function Montage({items,revealDelay=0}){
   if(items.length<=5||matchMedia('(prefers-reduced-motion: reduce)').matches)return;
   let cancelled=false,timer,index=0;
   const pages=Math.ceil(items.length/5);
-  async function advance(){
-   if(cancelled)return;
-   if(document.hidden){timer=setTimeout(advance,2100);return;}
-   const next=(index+1)%pages;
-   const upcoming=Array.from({length:Math.min(5,items.length)},(_,i)=>items[(next*5+i)%items.length]);
-   await Promise.all(upcoming.map(x=>new Promise(resolve=>{
-    if(!x.cover){resolve();return;}const img=new Image();const timeout=setTimeout(resolve,1800);
-    const finish=()=>{clearTimeout(timeout);resolve();};img.onload=finish;img.onerror=finish;
+  // Preload during the current round, not after its timer expires.
+  const preload=page=>{
+   Array.from({length:Math.min(5,items.length)},(_,i)=>items[(page*5+i)%items.length]).forEach(x=>{
+    if(!x.cover)return;
+    const img=new Image();
     img.src=x.cover.startsWith('https://cdn.myanimelist.net/')?'/api/image?src='+encodeURIComponent(x.cover):x.cover;
-   })));
-   if(cancelled)return;index=next;setFirst(false);setBatch(next);timer=setTimeout(advance,2100);
+   });
+  };
+  preload(1%pages);
+  function advance(){
+   if(cancelled)return;
+   if(!document.hidden){
+    index=(index+1)%pages;setFirst(false);setBatch(index);
+    preload((index+1)%pages);
+   }
+   timer=setTimeout(advance,2100);
   }
   timer=setTimeout(advance,revealDelay*1000+2100);
   return()=>{cancelled=true;clearTimeout(timer);};

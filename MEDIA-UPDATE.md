@@ -20,3 +20,12 @@ Remaining visual QA: the final phone/tablet graveyard check and visual confirmat
 
 ## Still deferred
 Additional music files, final GIF reassignment, and the broader website typography/design pass.
+
+## Keepsake revision — 2026-10-16
+- All five user-supplied backgrounds are selectable: twilight sky, purple clouds, sunset sea, orange sky (image 4), and autumn canal. Selection stays identical in the on-screen card and its download. Controls are excluded from export.
+- Four statistics: completed anime, completed manga, estimated watch hours, estimated reading hours. Runtime is episode count times average episode duration; reading assumes five minutes per chapter. Both are content estimates for completed titles selected by completion year, not a reconstruction of hours spent in that year. Unknown metadata produces a partial label or an unavailable value. No calculation footnote appears in the image; explanation lives in the info panel.
+- The character is selected only from that user's MAL favourites. Curated art is preferred when available. The current curated cutout is Saitama; other favourites still use a large blended MAL portrait fallback. Expanding the curated artwork collection remains outstanding. Demo and keepsake-preview deliberately show Saitama and fictional data.
+- Top-five lists, personal signatures, actual hidden-gem title(s), and Your story, yours to keep remain in the same exported DOM.
+- Cover rotation preloads the next group during the current round, removing the image-loading delay formerly added after 2.1 seconds. Initial reveal timing and individual pop animation unchanged.
+- Discovery captions use Transcity; rating denominators stay beside their scores. Campaign eligibility labels are omitted from the highest-score genre caption.
+- Verified phone (390px) and tablet (820px) reflow, five background options, and a downloaded orange-sky phone PNG with matching text, background, fonts, character and full footer.
